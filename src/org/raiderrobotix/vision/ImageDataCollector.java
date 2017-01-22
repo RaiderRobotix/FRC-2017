@@ -17,8 +17,12 @@ public class ImageDataCollector implements Runnable {
 				System.err.println("Could Not Find Captured Image");
 				image = null;
 			}
-			new ImageHandler(image).writeImageData(); // Write Image data to
-														// roboRIO
+			ImageHandler handler = new ImageHandler(image);
+			handler.writeImageData(); // Write Image data to roboRIO
+			if (VisionConstants.PICTURE_FILE.exists()) {
+				// Delete Image for connectivity purposes.
+				VisionConstants.PICTURE_FILE.delete();
+			}
 		}
 	}
 

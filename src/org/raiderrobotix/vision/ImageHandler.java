@@ -89,5 +89,5 @@ public final class ImageHandler extends ImageUtilities {
 		}
 		LinuxExecuter.execute(command.toString()); // Write image via Python
 	}
-
+	
 }
