@@ -29,6 +29,12 @@ public final class CameraSetup {
 
 	public boolean linedUpToScore() {
 		updateData();
+		if (m_byteList[1] == Size.ERROR.getByte()) {
+			// If can't connect to camera, don't use it.
+			m_drives.setSpeed(0.0);
+			m_step = 0;
+			return true;
+		}
 		if (m_step == 0) {
 			m_drives.brakesOff();
 			m_drives.setSpeed(0.0);

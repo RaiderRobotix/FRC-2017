@@ -75,14 +75,19 @@ public final class ImageHandler extends ImageUtilities {
 
 	public void writeImageData() {
 		// Create command to write image
-		StringBuilder command = new StringBuilder(VisionConstants.I2C_WRITE_COMMAND_INIT);
+		StringBuilder command = new StringBuilder(VisionConstants.ROBORIO_WRITE_COMMAND_INIT);
 		command.append(Integer.toString(VisionConstants.ARRAY_INITIAL));
-		Size[] numsToAdd = new Size[] { getLineSpread(), getCenterX(), getDistortion() };
-		for (Size i : numsToAdd) {
-			command.append(" " + Byte.toString(i.getByte()));
+		if (m_image != null) {
+			Size[] numsToAdd = new Size[] { getLineSpread(), getCenterX(), getDistortion() };
+			for (Size i : numsToAdd) {
+				command.append(" " + Byte.toString(i.getByte()));
+			}
+		} else {
+			for (int i = 0; i < VisionConstants.ARRAY_SIZE; i++) {
+				command.append(" " + Byte.toString(Size.ERROR.getByte()));
+			}
 		}
-		LinuxExecuter.execute(command.toString()); // Write image to I2C via
-													// Python
+		LinuxExecuter.execute(command.toString()); // Write image via Python
 	}
 
 }

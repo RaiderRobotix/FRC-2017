@@ -9,15 +9,16 @@ public class ImageDataCollector implements Runnable {
 
 	public void run() {
 		while (true) {
+			BufferedImage image;
 			try {
-				BufferedImage image = takePicture();
+				image = takePicture();
 				ImageUtilities.setContrast(image, VisionConstants.CONTRAST);
-				new ImageHandler(image).writeImageData(); // Write Image data to
-															// I2C
 			} catch (IOException e) {
 				System.err.println("Could Not Find Captured Image");
-				e.printStackTrace();
+				image = null;
 			}
+			new ImageHandler(image).writeImageData(); // Write Image data to
+														// roboRIO
 		}
 	}
 
