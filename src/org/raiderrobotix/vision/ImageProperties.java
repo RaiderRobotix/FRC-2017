@@ -2,8 +2,6 @@ package org.raiderrobotix.vision;
 
 import java.util.Properties;
 
-import org.raiderrobotix.frc2017.Constants;
-
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 
 public class ImageProperties extends Properties {
@@ -14,7 +12,7 @@ public class ImageProperties extends Properties {
 	private final NetworkTable m_imageSizeTable;
 
 	private ImageProperties() {
-		m_imageSizeTable = NetworkTable.getTable(Constants.CAMERA_NETWORK_TABLE);
+		m_imageSizeTable = NetworkTable.getTable(VisionConstants.CAMERA_NETWORK_TABLE);
 	}
 
 	public static ImageProperties getInstance() {

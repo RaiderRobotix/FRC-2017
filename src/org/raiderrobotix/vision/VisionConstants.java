@@ -2,7 +2,9 @@ package org.raiderrobotix.vision;
 
 import java.io.File;
 
-public abstract class VisionConstants {
+import org.raiderrobotix.frc2017.Constants;
+
+public abstract class VisionConstants extends Constants {
 
 	static final float CONTRAST = 750.0f;
 	static final float TAPE_DISTANCE_LOWER_LIMIT = 0.55f;
