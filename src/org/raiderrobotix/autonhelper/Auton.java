@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import org.raiderrobotix.frc2017.CameraSetup;
 import org.raiderrobotix.frc2017.Constants;
 import org.raiderrobotix.frc2017.Drivebase;
+import org.raiderrobotix.frc2017.GearCollector;
 
 public final class Auton extends ArrayList<Instruction> {
 
@@ -15,8 +16,7 @@ public final class Auton extends ArrayList<Instruction> {
 
 	@SuppressWarnings("unchecked")
 	public Auton() throws IOException, ClassNotFoundException {
-		ObjectInputStream in = new ObjectInputStream(new FileInputStream(
-				Constants.AUTON_FILE_PATH));
+		ObjectInputStream in = new ObjectInputStream(new FileInputStream(Constants.AUTON_FILE_PATH));
 		for (Instruction i : (ArrayList<Instruction>) in.readObject()) {
 			this.add(i);
 		}
@@ -33,10 +33,21 @@ public final class Auton extends ArrayList<Instruction> {
 		try {
 			Drivebase drives = Drivebase.getInstance();
 			CameraSetup camera = CameraSetup.getInstance();
+			GearCollector collector = GearCollector.getInstance();
 			Instruction i = this.get(0);
 			switch (Integer.parseInt(i.getNext())) {
+			case Mechanism.GEAR_COLLECTOR:
+				switch (Integer.parseInt(i.getNext())) {
+				case Mechanism.Collector.OPEN:
+					collector.openCollector();
+					break;
+				case Mechanism.Collector.CLOSE:
+					collector.closeCollector();
+					break;
+				}
+				break;
 			case Mechanism.LINE_UP:
-				if(camera.linedUpToScore()) {
+				if (camera.linedUpToScore()) {
 					time = 0.0;
 					this.remove(0);
 				}

@@ -120,6 +120,12 @@ public final class InstructionPanel extends JPanel {
 					m_extraDataPanel.add(m_valuePanel);
 					m_extraDataPanel.add(new JLabel(""));
 					break;
+				case Mechanism.LINE_UP:
+					m_extraDataPanel.add(new JLabel(""));
+					m_extraDataPanel.add(new JLabel(""));
+				case Mechanism.GEAR_COLLECTOR:
+					m_extraDataPanel.add(new JLabel(""));
+					m_extraDataPanel.add(new JLabel(""));
 				}
 				AutonUI.getInstance().updateUI(false);
 			}
@@ -145,7 +151,7 @@ public final class InstructionPanel extends JPanel {
 		westPanel.add(northWesternPanel);
 		westPanel.add(m_mechanismDropDown);
 		this.add(westPanel);
-		m_extraDataPanel.add(m_valuePanel);
+		m_extraDataPanel.add(new JLabel(""));
 		m_extraDataPanel.add(new JLabel(""));
 		this.add(m_extraDataPanel);
 		this.setBorder(BorderFactory.createLineBorder(Color.BLACK));
@@ -170,9 +176,22 @@ public final class InstructionPanel extends JPanel {
 		n.add(Mechanism.Drives.TURN);
 		m_mechanismMapping.put("Drive- Spin", n);
 
+		// Camera- Line Up
 		n = new ArrayList<Integer>();
 		n.add(Mechanism.LINE_UP);
 		m_mechanismMapping.put("Line Up For Gear", n);
+
+		// Open Gear Collector
+		n = new ArrayList<Integer>();
+		n.add(Mechanism.GEAR_COLLECTOR);
+		n.add(Mechanism.Collector.OPEN);
+		m_mechanismMapping.put("Open Gear Collector", n);
+
+		// Close Gear Collector
+		n = new ArrayList<Integer>();
+		n.add(Mechanism.GEAR_COLLECTOR);
+		n.add(Mechanism.Collector.CLOSE);
+		m_mechanismMapping.put("Close Gear Collector", n);
 
 		// Brakes On
 		n = new ArrayList<Integer>();

@@ -36,8 +36,7 @@ public final class InstructionSet extends ArrayList<InstructionPanel> {
 			nonScroll.add(i);
 			i.setPreferredSize(new Dimension(790, 56));
 		}
-		JScrollPane scroll = new JScrollPane(nonScroll,
-				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+		JScrollPane scroll = new JScrollPane(nonScroll, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		if (this.size() > 7) {
 			scroll.setPreferredSize(new Dimension(829, 510));
@@ -72,7 +71,8 @@ public final class InstructionSet extends ArrayList<InstructionPanel> {
 	/**
 	 * Make plain-text code from the user's current selections.
 	 * 
-	 * @param methodName The name of the method to use in the code.
+	 * @param methodName
+	 *            The name of the method to use in the code.
 	 * @return The plain-text code that you can copy into the robot files.
 	 */
 	public String getCode(String methodName) {
@@ -81,7 +81,7 @@ public final class InstructionSet extends ArrayList<InstructionPanel> {
 		ret += "if(m_step == 0) {\n";
 		int stepCounter = 1;
 		boolean extraIndentExists = false;
-		
+
 		// Add Resets and Close Last Step
 		for (InstructionPanel i : this) {
 			switch (Integer.parseInt(i.getInstruction().getNext())) {
@@ -105,13 +105,22 @@ public final class InstructionSet extends ArrayList<InstructionPanel> {
 				ret += "}\n";
 				extraIndentExists = false;
 			}
-			
+
 			// Create Current Step
-			ret += "} else if (m_step == " + Integer.toString(stepCounter)
-					+ ") {\n";
+			ret += "} else if (m_step == " + Integer.toString(stepCounter) + ") {\n";
 			stepCounter++;
 			Instruction instruction = i.getInstruction();
 			switch (Integer.parseInt(instruction.getNext())) {
+			case Mechanism.GEAR_COLLECTOR:
+				switch (Integer.parseInt(instruction.getNext())) {
+				case Mechanism.Collector.OPEN:
+					ret += "m_collector.openCollector();\n";
+					break;
+				case Mechanism.Collector.CLOSE:
+					ret += "m_collector.closeCollector();\n";
+					break;
+				}
+				break;
 			case Mechanism.LINE_UP:
 				ret += "if (m_camera.linedUpToScore()) {\n";
 				extraIndentExists = true;
@@ -123,13 +132,12 @@ public final class InstructionSet extends ArrayList<InstructionPanel> {
 			case Mechanism.DRIVES:
 				switch (Integer.parseInt(instruction.getNext())) {
 				case Mechanism.Drives.STRAIGHT:
-					ret += "if (m_drives.driveStraight("
-							+ instruction.getNext() + ", "
-							+ instruction.getNext() + ")) {\n";
+					ret += "if (m_drives.driveStraight(" + instruction.getNext() + ", " + instruction.getNext()
+							+ ")) {\n";
 					break;
 				case Mechanism.Drives.TURN:
-					ret += "if (m_drives.turnToAngle(" + instruction.getNext()
-							+ ", " + instruction.getNext() + ")) {\n";
+					ret += "if (m_drives.turnToAngle(" + instruction.getNext() + ", " + instruction.getNext()
+							+ ")) {\n";
 					break;
 				}
 				extraIndentExists = true;
@@ -143,7 +151,7 @@ public final class InstructionSet extends ArrayList<InstructionPanel> {
 				break;
 			}
 		}
-		
+
 		// End Auton Method
 		if (extraIndentExists) {
 			ret += "}\n";

@@ -45,12 +45,13 @@ public abstract class Constants { // TODO: get ALL values
 	public static final double INCHES_PER_COUNT = INCHES_PER_REVOLUTION / COUNTS_PER_REVOLUTION;
 
 	// Camera Constants
-	public static final int I2C_CAMERA_ADDRESS = 7;
 	public static final double VISION_TURN_SPEED = 0.2; // TODO: adjust values
 	public static final double VISION_DRIVE_SPEED = 0.4;
 	public static final double VISION_DRIVE_FIX_LENGTH = 6.0;
 	public static final double VISION_TURN_FIX_ANGLE = 7.5;
-	
+	public static final String CAMERA_NETWORK_TABLE = "IMPLEMENT"; // TODO:
+																	// implement
+
 	// Joysticks
 	public static final int LEFT_JOYSTICK_PORT = 0;
 	public static final int RIGHT_JOYSTICK_PORT = 1;
@@ -65,5 +66,9 @@ public abstract class Constants { // TODO: get ALL values
 	public static final boolean LEFT_DRIVE_MOTORS_INVERTED = true;
 	public static final boolean LEFT_ENCODER_INVERTED = true;
 	public static final boolean RIGHT_ENCODER_INVERTED = false;
+
+	// Pneumatic Constants TODO: get
+	public static final int LEFT_CYLINDER_SOLENOID_CHANNEL = 0;
+	public static final int RIGHT_CYLINDER_SOLENOID_CHANNEL = 1;
 
 }

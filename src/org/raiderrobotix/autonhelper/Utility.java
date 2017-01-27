@@ -31,7 +31,7 @@ public abstract class Utility {
 		try {
 			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 		} catch (Exception e) {
-			// Do nothing, as look and feel are decorative.
+			// Do nothing, as look and feel are just decorative.
 		}
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setDialogTitle("Choose a File");

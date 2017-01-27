@@ -10,13 +10,17 @@ public final class AutonController {
 	private static AutonController m_instance;
 
 	private int m_step;
+	@SuppressWarnings("unused") // TODO: un-suppress
 	private final Drivebase m_drives;
+	@SuppressWarnings("unused")
+	private final GearCollector m_collector;
 	private final Timer m_timer;
 	private final Joystick m_switchBox;
 	private Auton m_auton;
 
 	private AutonController() {
 		m_drives = Drivebase.getInstance();
+		m_collector = GearCollector.getInstance();
 		m_switchBox = new Joystick(Constants.SWITCH_BOX_PORT);
 		m_timer = new Timer();
 		m_step = 0;

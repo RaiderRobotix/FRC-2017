@@ -11,9 +11,11 @@ public final class ImageHandler extends ImageUtilities {
 	private float m_distortion;
 	private float m_lineSpread;
 	private int m_width;
+	private final ImageProperties m_props;
 
 	public ImageHandler(BufferedImage img) {
 		m_image = img;
+		m_props = ImageProperties.getInstance();
 		update();
 	}
 
@@ -74,20 +76,9 @@ public final class ImageHandler extends ImageUtilities {
 	}
 
 	public void writeImageData() {
-		// Create command to write image
-		StringBuilder command = new StringBuilder(VisionConstants.ROBORIO_WRITE_COMMAND_INIT);
-		command.append(Integer.toString(VisionConstants.ARRAY_INITIAL));
-		if (m_image != null) {
-			Size[] numsToAdd = new Size[] { getLineSpread(), getCenterX(), getDistortion() };
-			for (Size i : numsToAdd) {
-				command.append(" " + Byte.toString(i.getByte()));
-			}
-		} else {
-			for (int i = 0; i < VisionConstants.ARRAY_SIZE; i++) {
-				command.append(" " + Byte.toString(Size.ERROR.getByte()));
-			}
-		}
-		LinuxExecuter.execute(command.toString()); // Write image via Python
+		m_props.setProperty(VisionConstants.DISTORTION, getDistortion().getByte());
+		m_props.setProperty(VisionConstants.LINE_SPREAD, getLineSpread().getByte());
+		m_props.setProperty(VisionConstants.CENTER_X, getCenterX().getByte());
 	}
-	
+
 }
