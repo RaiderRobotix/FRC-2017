@@ -14,7 +14,7 @@ public abstract class VisionConstants extends Constants {
 	static final float DISTORTION_DEADBAND = 0.0085f;
 	static final int TAPE_LOWER_THRESHOLD = 240;
 	static final String PICTURE_COMMAND = "python /home/pi/Vision/take_picture.py";
-	static final File PICTURE_FILE = new File("/home/pi/Vision/res/imgs/captured_picture.jpg");
+	static final File PICTURE_FILE = new File("/home/pi/Vision/captured_picture.jpg");
 
 	public static final String LINE_SPREAD = "lineSpread";
 	public static final String CENTER_X = "centerX";
