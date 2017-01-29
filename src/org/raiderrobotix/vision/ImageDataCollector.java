@@ -3,32 +3,35 @@ package org.raiderrobotix.vision;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-import javax.imageio.ImageIO;
+import com.hopding.jrpicam.RaspiCam;
+import com.hopding.jrpicam.exceptions.FailedToRunRaspistillException;
 
 public class ImageDataCollector implements Runnable {
 
-	public void run() {
-		while (true) {
-			BufferedImage image;
-			try {
-				image = takePicture();
-				ImageUtilities.setContrast(image, VisionConstants.CONTRAST);
-			} catch (IOException e) {
-				System.err.println("Could Not Find Captured Image");
-				image = null;
-			}
-			ImageHandler handler = new ImageHandler(image);
-			handler.writeImageData(); // Write Image data to roboRIO
-			if (VisionConstants.PICTURE_FILE.exists()) {
-				// Delete Image for connectivity purposes.
-				VisionConstants.PICTURE_FILE.delete();
-			}
+	private com.hopding.jrpicam.RaspiCam m_camera;
+
+	public ImageDataCollector() {
+		try {
+			m_camera = new RaspiCam();
+		} catch (FailedToRunRaspistillException e) {
+			System.err.println("Could Not Open Camera");
+			e.printStackTrace();
+			System.exit(0);
 		}
 	}
 
-	public BufferedImage takePicture() throws IOException {
-		LinuxExecuter.execute(VisionConstants.PICTURE_COMMAND);
-		return ImageIO.read(VisionConstants.PICTURE_FILE);
+	public void run() {
+		while (true) {
+			BufferedImage image = null;
+			try {
+				image = m_camera.takeBufferedStill();
+				ImageUtilities.setContrast(image, VisionConstants.CONTRAST_SCALE, VisionConstants.CONTRAST_OFFSET);
+				new ImageHandler(image).writeImageData();
+				// Write Image data to roboRIO
+			} catch (InterruptedException | IOException e) {
+				System.err.println("Could Not Take Image");
+			}
+		}
 	}
 
 	public static void main(String[] args) {

@@ -15,5 +15,6 @@
 	<classpathentry kind="lib" path="C:/Users/raiderrobotix/wpilib/java/current/lib/opencv-sources.jar"/>
 	<classpathentry kind="lib" path="C:/Users/raiderrobotix/wpilib/java/current/lib/WPILib.jar"/>
 	<classpathentry kind="lib" path="C:/Users/raiderrobotix/wpilib/java/current/lib/WPILib-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/raiderrobotix/Desktop/2017 Tools/RaspberryPiCamera.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

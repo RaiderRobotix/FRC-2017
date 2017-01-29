@@ -1,39 +1,21 @@
 package org.raiderrobotix.vision;
 
-import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.awt.image.RescaleOp;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
+import javax.imageio.stream.FileImageOutputStream;
 
 public abstract class ImageUtilities {
 
-	public static final void setContrast(BufferedImage img, float amount) {
+	public static final void setContrast(BufferedImage img, float scale, int offset) {
 		// Adjust contrast of a BufferedImage
-		for (int x = 0; x < img.getWidth(); x++) {
-			for (int y = 0; y < img.getHeight(); y++) {
-				amount = (float) Math.pow((double) ((255.0f + amount) / 255.0f), 2.0);
-				float value = (255.0f + amount) / 255.0f;
-				value *= value;
-				Color c = new Color(img.getRGB(x, y));
-				float r = c.getRed();
-				float g = c.getGreen();
-				float b = c.getBlue();
-				r /= 255.0f;
-				g /= 255.0f;
-				b /= 255.0f;
-				r = ((((r - 0.5f) * value) + 0.5f) * 255.0f);
-				g = ((((g - 0.5f) * value) + 0.5f) * 255.0f);
-				b = ((((b - 0.5f) * value) + 0.5f) * 255.0f);
-				c = new Color(fixNum(r), fixNum(g), fixNum(b));
-				img.setRGB(x, y, c.getRGB());
-			}
-		}
-	}
-
-	private static int fixNum(float num) {
-		// Fix integers not in RGB color range.
-		int n = (int) num;
-		n = n > 255 ? 255 : n;
-		n = n < 0 ? 0 : n;
-		return n;
+		RescaleOp op = new RescaleOp(scale, offset, null);
+		op.filter(img, img);
 	}
 
 	/**
@@ -61,7 +43,7 @@ public abstract class ImageUtilities {
 		BufferedImage ret = new BufferedImage((x2 - x1) + 1, img.getHeight(), BufferedImage.TYPE_INT_ARGB);
 		for (int x = x1; x <= x2; x++) {
 			for (int y = 0; y < img.getHeight(); y++) {
-				ret.setRGB(x1, y, img.getRGB(x1, y));
+				ret.setRGB(x - x1, y, img.getRGB(x1, y));
 			}
 		}
 		return ret;
@@ -72,7 +54,7 @@ public abstract class ImageUtilities {
 		BufferedImage ret = new BufferedImage(img.getWidth(), (y2 - y1) + 1, BufferedImage.TYPE_INT_ARGB);
 		for (int x = 0; x < img.getWidth(); x++) {
 			for (int y = y1; y <= y2; y++) {
-				ret.setRGB(x, y1, img.getRGB(x, y1));
+				ret.setRGB(x, y - y1, img.getRGB(x, y1));
 			}
 		}
 		return ret;
@@ -87,6 +69,7 @@ public abstract class ImageUtilities {
 				}
 			}
 		}
+		System.out.printf("num true: %f\n", (ret / ((float) table.length * table[0].length)));
 		return ret / ((float) table.length * table[0].length);
 	}
 
@@ -118,6 +101,15 @@ public abstract class ImageUtilities {
 		retX /= numTrue;
 		retY /= numTrue;
 		return new float[] { retX, retY };
+	}
+
+	public static void writeImage(BufferedImage img, String path) throws IOException {
+		ImageWriter writer = ImageIO.getImageWritersByFormatName(path.substring(path.lastIndexOf(".") + 1)).next();
+		ImageWriteParam param = writer.getDefaultWriteParam();
+		param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+		param.setCompressionQuality(1.0F);
+		writer.setOutput(new FileImageOutputStream(new File(path)));
+		writer.write(img);
 	}
 
 }

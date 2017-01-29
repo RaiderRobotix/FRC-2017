@@ -2,17 +2,17 @@ package org.raiderrobotix.vision;
 
 import java.util.Properties;
 
-import edu.wpi.first.wpilibj.networktables.NetworkTable;
-
 public class ImageProperties extends Properties {
 
 	private static final long serialVersionUID = 1L;
 	private static ImageProperties m_instance;
 
-	private final NetworkTable m_imageSizeTable;
+	// private final NetworkTable m_imageSizeTable; TODO: uncomment
 
 	private ImageProperties() {
-		m_imageSizeTable = NetworkTable.getTable(VisionConstants.CAMERA_NETWORK_TABLE);
+		// m_imageSizeTable =
+		// NetworkTable.getTable(VisionConstants.CAMERA_NETWORK_TABLE);
+		// TODO: uncomment
 	}
 
 	public static ImageProperties getInstance() {
@@ -43,11 +43,15 @@ public class ImageProperties extends Properties {
 	}
 
 	private void updateProperty(String key) {
-		super.setProperty(key, m_imageSizeTable.getString(key, Byte.toString(Size.ERROR.getByte())));
+		// super.setProperty(key, m_imageSizeTable.getString(key,
+		// Byte.toString(Size.ERROR.getByte())));
 	}
 
 	public void setProperty(String key, byte value) {
-		m_imageSizeTable.putString(key, Byte.toString(value));
+		// m_imageSizeTable.putString(key, Byte.toString(value));
+		// TODO: uncomment
+		super.setProperty(key, Byte.toString(value));
+		System.out.printf("Updating Property- %s: %d\n", key, value);
 	}
 
 }
