@@ -2,6 +2,9 @@ package org.raiderrobotix.vision;
 
 import java.util.Properties;
 
+/**
+ * Holds data for images in FRC's NetworkTables and Properties.
+ */
 public class ImageProperties extends Properties {
 
 	private static final long serialVersionUID = 1L;

@@ -10,6 +10,9 @@ import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
 import javax.imageio.stream.FileImageOutputStream;
 
+/**
+ * A set of utilities to work with BufferedImages
+ */
 public abstract class ImageUtilities {
 
 	public static final void setContrast(BufferedImage img, float scale, int offset) {

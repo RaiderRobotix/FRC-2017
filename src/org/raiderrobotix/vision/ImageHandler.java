@@ -2,6 +2,9 @@ package org.raiderrobotix.vision;
 
 import java.awt.image.BufferedImage;
 
+/**
+ * FRC-2017 specific Image Handler to produce image data.
+ */
 public final class ImageHandler extends ImageUtilities {
 
 	private BufferedImage m_image;
@@ -23,16 +26,17 @@ public final class ImageHandler extends ImageUtilities {
 		m_width = m_image.getWidth();
 		m_leftCenterX = ((float) getCenter( // Get the centers of the two
 											// different pieces of tape.
-				getTruthTable(xCut(m_image, 0, (m_width / 2) - 1), VisionConstants.TAPE_LOWER_THRESHOLD_COLOR.getRGB()))[0])
+				getTruthTable(xCut(m_image, 0, (m_width / 2) - 1),
+						VisionConstants.TAPE_LOWER_THRESHOLD_COLOR.getRGB()))[0])
 				/ ((float) m_width);
-		m_rightCenterX = ((float) m_width + getCenter(
-				getTruthTable(xCut(m_image, (m_width / 2), m_width - 1), VisionConstants.TAPE_LOWER_THRESHOLD_COLOR.getRGB()))[0])
-				/ ((float) m_width);
+		m_rightCenterX = ((float) m_width + getCenter(getTruthTable(xCut(m_image, (m_width / 2), m_width - 1),
+				VisionConstants.TAPE_LOWER_THRESHOLD_COLOR.getRGB()))[0]) / ((float) m_width);
 		m_centerX = ((float) getCenter(getTruthTable(m_image, VisionConstants.TAPE_LOWER_THRESHOLD_COLOR.getRGB()))[0])
 				/ ((float) m_width); // Center of tape structure
 		m_distortion = percentAboveThreshold( // amount turned
 				xCut(m_image, 0, (m_width / 2) - 1), VisionConstants.TAPE_LOWER_THRESHOLD_COLOR.getRGB())
-				- percentAboveThreshold(xCut(m_image, m_width / 2, m_width - 1), VisionConstants.TAPE_LOWER_THRESHOLD_COLOR.getRGB());
+				- percentAboveThreshold(xCut(m_image, m_width / 2, m_width - 1),
+						VisionConstants.TAPE_LOWER_THRESHOLD_COLOR.getRGB());
 		m_lineSpread = m_rightCenterX - m_leftCenterX; // length between centers
 														// of tape pieces
 	}
