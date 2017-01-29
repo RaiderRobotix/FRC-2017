@@ -17,12 +17,12 @@ public abstract class Mechanism {
 		public static final int BRAKES_OFF = 2;
 
 	}
-	
+
 	public abstract class Collector {
-		
+
 		public static final int OPEN = 0;
 		public static final int CLOSE = 1;
-		
+
 	}
 
 }

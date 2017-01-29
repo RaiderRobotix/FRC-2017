@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage;
 /**
  * FRC-2017 specific Image Handler to produce image data.
  */
-public final class ImageHandler extends ImageUtilities {
+public final class FRC2017ImageHandler extends BufferedImageUtilities {
 
 	private BufferedImage m_image;
 	private float m_leftCenterX;
@@ -14,11 +14,11 @@ public final class ImageHandler extends ImageUtilities {
 	private float m_distortion;
 	private float m_lineSpread;
 	private int m_width;
-	private final ImageProperties m_props;
+	private final ImageNetworkProperties m_props;
 
-	public ImageHandler(BufferedImage img) {
+	public FRC2017ImageHandler(BufferedImage img) {
 		m_image = img;
-		m_props = ImageProperties.getInstance();
+		m_props = ImageNetworkProperties.getInstance();
 		update();
 	}
 

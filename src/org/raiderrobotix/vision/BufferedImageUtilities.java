@@ -13,7 +13,7 @@ import javax.imageio.stream.FileImageOutputStream;
 /**
  * A set of utilities to work with BufferedImages
  */
-public abstract class ImageUtilities {
+public abstract class BufferedImageUtilities {
 
 	public static final void setContrast(BufferedImage img, float scale, int offset) {
 		// Adjust contrast of a BufferedImage
@@ -107,6 +107,7 @@ public abstract class ImageUtilities {
 	}
 
 	public static void writeImage(BufferedImage img, String path) throws IOException {
+		// Write the image without any compression
 		ImageWriter writer = ImageIO.getImageWritersByFormatName(path.substring(path.lastIndexOf(".") + 1)).next();
 		ImageWriteParam param = writer.getDefaultWriteParam();
 		param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);

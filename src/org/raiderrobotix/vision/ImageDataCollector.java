@@ -25,8 +25,9 @@ public class ImageDataCollector implements Runnable {
 			BufferedImage image = null;
 			try {
 				image = m_camera.takeBufferedStill();
-				ImageUtilities.setContrast(image, VisionConstants.CONTRAST_SCALE, VisionConstants.CONTRAST_OFFSET);
-				new ImageHandler(image).writeImageData();
+				BufferedImageUtilities.setContrast(image, VisionConstants.CONTRAST_SCALE,
+						VisionConstants.CONTRAST_OFFSET);
+				new FRC2017ImageHandler(image).writeImageData();
 				// Write Image data to roboRIO
 			} catch (InterruptedException | IOException e) {
 				System.err.println("Could Not Take Image");

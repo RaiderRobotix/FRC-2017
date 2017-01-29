@@ -1,6 +1,6 @@
 package org.raiderrobotix.frc2017;
 
-import org.raiderrobotix.autonhelper.Auton;
+import org.raiderrobotix.autonhelper.AutonomousMode;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
@@ -16,7 +16,7 @@ public final class AutonController {
 	private final GearCollector m_collector;
 	private final Timer m_timer;
 	private final Joystick m_switchBox;
-	private Auton m_auton;
+	private AutonomousMode m_auton;
 
 	private AutonController() {
 		m_drives = Drivebase.getInstance();
@@ -63,7 +63,7 @@ public final class AutonController {
 	public void useFTPFile() {
 		if (m_step == 0) {
 			try {
-				m_auton = new Auton();
+				m_auton = new AutonomousMode();
 				m_timer.start();
 				m_timer.reset();
 				m_step++;

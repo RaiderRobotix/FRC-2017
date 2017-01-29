@@ -10,12 +10,12 @@ import org.raiderrobotix.frc2017.Constants;
 import org.raiderrobotix.frc2017.Drivebase;
 import org.raiderrobotix.frc2017.GearCollector;
 
-public final class Auton extends ArrayList<Instruction> {
+public final class AutonomousMode extends ArrayList<Instruction> {
 
 	private static final long serialVersionUID = 1L;
 
 	@SuppressWarnings("unchecked")
-	public Auton() throws IOException, ClassNotFoundException {
+	public AutonomousMode() throws IOException, ClassNotFoundException {
 		ObjectInputStream in = new ObjectInputStream(new FileInputStream(Constants.AUTON_FILE_PATH));
 		for (Instruction i : (ArrayList<Instruction>) in.readObject()) {
 			this.add(i);
@@ -23,7 +23,7 @@ public final class Auton extends ArrayList<Instruction> {
 		in.close();
 	}
 
-	public Auton(ArrayList<Instruction> autonList) {
+	public AutonomousMode(ArrayList<Instruction> autonList) {
 		for (Instruction i : autonList) {
 			this.add(i);
 		}
