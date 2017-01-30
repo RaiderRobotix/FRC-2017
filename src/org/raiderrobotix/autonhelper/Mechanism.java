@@ -7,6 +7,8 @@ public abstract class Mechanism {
 	public static final int BRAKES = 1;
 	public static final int LINE_UP = 2;
 	public static final int GEAR_COLLECTOR = 3;
+	public static final int INTAKE = 4;
+	public static final int SHOOTER = 5;
 
 	public abstract class Drives {
 
@@ -22,6 +24,13 @@ public abstract class Mechanism {
 
 		public static final int OPEN = 0;
 		public static final int CLOSE = 1;
+
+	}
+
+	public abstract class Intake {
+
+		public static final int INTAKE_IN = 0;
+		public static final int INTAKE_OFF = 1;
 
 	}
 

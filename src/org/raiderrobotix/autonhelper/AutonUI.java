@@ -18,6 +18,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
+import org.raiderrobotix.frc2017.Constants;
+
 public final class AutonUI extends JFrame {
 
 	private static final long serialVersionUID = 1L;
@@ -44,10 +46,13 @@ public final class AutonUI extends JFrame {
 		});
 		m_helpButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(null, new JLabel(
-						"<html>There are currently no constants</html>",
-						SwingConstants.CENTER), "Constants",
-						JOptionPane.PLAIN_MESSAGE);
+				JOptionPane.showMessageDialog(null,
+						new JLabel(
+								"<html>Constants.SHOOTER_HIGH_SPEED = " + Double.toString(Constants.SHOOTER_HIGH_SPEED)
+										+ ";<br>Constants.SHOOTER_LOW_SPEED = "
+										+ Double.toString(Constants.SHOOTER_LOW_SPEED) + ";</html>",
+								SwingConstants.CENTER),
+						"Constants", JOptionPane.PLAIN_MESSAGE);
 			}
 		});
 		m_ftpButton.addActionListener(new ActionListener() {
@@ -59,13 +64,9 @@ public final class AutonUI extends JFrame {
 				try {
 					Utility.sendOverFile(instructions);
 				} catch (IOException e1) {
-					JOptionPane
-							.showMessageDialog(
-									null,
-									new JLabel(
-											"<html>There was an error<br>sending the file.</html>",
-											SwingConstants.CENTER), "ERROR",
-									JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null,
+							new JLabel("<html>There was an error<br>sending the file.</html>", SwingConstants.CENTER),
+							"ERROR", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
@@ -73,22 +74,15 @@ public final class AutonUI extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					String methodName = Utility.getName();
-					Clipboard c = Toolkit.getDefaultToolkit()
-							.getSystemClipboard();
-					StringSelection code = new StringSelection(m_is
-							.getCode(methodName));
+					Clipboard c = Toolkit.getDefaultToolkit().getSystemClipboard();
+					StringSelection code = new StringSelection(m_is.getCode(methodName));
 					c.setContents(code, code);
-					JOptionPane.showMessageDialog(null, new JLabel(
-							"Copy Successful!", SwingConstants.CENTER),
+					JOptionPane.showMessageDialog(null, new JLabel("Copy Successful!", SwingConstants.CENTER),
 							"Message", JOptionPane.PLAIN_MESSAGE);
 				} catch (Exception e1) {
-					JOptionPane
-							.showMessageDialog(
-									null,
-									new JLabel(
-											"<html>There was an error<br>copying the code.</html>",
-											SwingConstants.CENTER), "ERROR",
-									JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null,
+							new JLabel("<html>There was an error<br>copying the code.</html>", SwingConstants.CENTER),
+							"ERROR", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
@@ -107,8 +101,8 @@ public final class AutonUI extends JFrame {
 	}
 
 	/**
-	 * Repaints and revalidates all components and puts them together if this
-	 * is the first time.
+	 * Repaints and revalidates all components and puts them together if this is
+	 * the first time.
 	 * 
 	 * @param init
 	 *            Is this the first time the UI is running for the user?

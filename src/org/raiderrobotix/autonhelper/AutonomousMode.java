@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import org.raiderrobotix.frc2017.CameraSetup;
 import org.raiderrobotix.frc2017.Constants;
 import org.raiderrobotix.frc2017.Drivebase;
+import org.raiderrobotix.frc2017.FuelHandler;
 import org.raiderrobotix.frc2017.GearCollector;
 
 public final class AutonomousMode extends ArrayList<Instruction> {
@@ -34,8 +35,22 @@ public final class AutonomousMode extends ArrayList<Instruction> {
 			Drivebase drives = Drivebase.getInstance();
 			CameraSetup camera = CameraSetup.getInstance();
 			GearCollector collector = GearCollector.getInstance();
+			FuelHandler fuelHandler = FuelHandler.getInstance();
 			Instruction i = this.get(0);
 			switch (Integer.parseInt(i.getNext())) {
+			case Mechanism.INTAKE:
+				switch(Integer.parseInt(i.getNext())) {
+				case Mechanism.Intake.INTAKE_IN:
+					fuelHandler.intakeFuel(false);
+					break;
+				case Mechanism.Intake.INTAKE_OFF:
+					fuelHandler.stopIntake();
+					break;
+				}
+				break;
+			case Mechanism.SHOOTER:
+				fuelHandler.setShooterSpeed(Double.parseDouble(i.getNext()));
+				break;
 			case Mechanism.GEAR_COLLECTOR:
 				switch (Integer.parseInt(i.getNext())) {
 				case Mechanism.Collector.OPEN:

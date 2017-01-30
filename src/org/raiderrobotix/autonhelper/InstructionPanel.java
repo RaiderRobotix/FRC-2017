@@ -123,9 +123,19 @@ public final class InstructionPanel extends JPanel {
 				case Mechanism.LINE_UP:
 					m_extraDataPanel.add(new JLabel(""));
 					m_extraDataPanel.add(new JLabel(""));
+					break;
 				case Mechanism.GEAR_COLLECTOR:
 					m_extraDataPanel.add(new JLabel(""));
 					m_extraDataPanel.add(new JLabel(""));
+					break;
+				case Mechanism.INTAKE:
+					m_extraDataPanel.add(new JLabel(""));
+					m_extraDataPanel.add(new JLabel(""));
+					break;
+				case Mechanism.SHOOTER:
+					m_extraDataPanel.add(new JLabel(""));
+					m_extraDataPanel.add(m_speedPanel);
+					break;
 				}
 				AutonUI.getInstance().updateUI(false);
 			}
@@ -209,6 +219,23 @@ public final class InstructionPanel extends JPanel {
 		n = new ArrayList<Integer>();
 		n.add(Mechanism.WAIT);
 		m_mechanismMapping.put("Timer- Wait", n);
+
+		// Intake- In
+		n = new ArrayList<Integer>();
+		n.add(Mechanism.INTAKE);
+		n.add(Mechanism.Intake.INTAKE_IN);
+		m_mechanismMapping.put("Intake- in", n);
+
+		// Intake- Off
+		n = new ArrayList<Integer>();
+		n.add(Mechanism.INTAKE);
+		n.add(Mechanism.Intake.INTAKE_IN);
+		m_mechanismMapping.put("Intake- Off", n);
+
+		// Set Shooter
+		n = new ArrayList<Integer>();
+		n.add(Mechanism.SHOOTER);
+		m_mechanismMapping.put("Set Shooter", n);
 	}
 
 	/**
@@ -240,6 +267,9 @@ public final class InstructionPanel extends JPanel {
 			break;
 		case Mechanism.WAIT:
 			ret.add(m_valueField.getText());
+			break;
+		case Mechanism.SHOOTER:
+			ret.add(m_speedField.getText());
 			break;
 		}
 		ret.add("$");

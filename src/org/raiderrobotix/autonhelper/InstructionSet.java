@@ -111,6 +111,19 @@ public final class InstructionSet extends ArrayList<InstructionPanel> {
 			stepCounter++;
 			Instruction instruction = i.getInstruction();
 			switch (Integer.parseInt(instruction.getNext())) {
+			case Mechanism.INTAKE:
+				switch (Integer.parseInt(instruction.getNext())) {
+				case Mechanism.Intake.INTAKE_IN:
+					ret += "m_fuelHandler.intakeFuel(false);\n";
+					break;
+				case Mechanism.Intake.INTAKE_OFF:
+					ret += "m_fuelHandler.stopIntake();\n";
+					break;
+				}
+				break;
+			case Mechanism.SHOOTER:
+				ret += "m_fuelHandler.setShooterSpeed(" + instruction.getNext() + ");\n";
+				break;
 			case Mechanism.GEAR_COLLECTOR:
 				switch (Integer.parseInt(instruction.getNext())) {
 				case Mechanism.Collector.OPEN:
