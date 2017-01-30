@@ -6,6 +6,12 @@ public abstract class Constants { // TODO: get ALL values
 	public static final String AUTON_FILE_PATH = "/home/lvuser/auton.dat";
 	public static final String FTP_PREFIX = "ftp://roboRIO-25-frc.local";
 
+	// Extra Mechanism Speed Constants TODO: get
+	public static final double FUEL_INTAKE_SPEED = 1.0;
+	public static final double CLIMB_SPEED = 1.0;
+	public static final double SHOOTER_HIGH_SPEED = 1.0; // TODO: get
+	public static final double SHOOTER_LOW_SPEED = 0.5; // TODO: get
+
 	// Auto-Driving Constants
 	public static final double TURN_ANGLE_TOLERANCE = 1.0; // (In Degrees)
 	public static final double DRIVE_STRAIGHT_ANGLE_TOLERANCE = 1.0;
@@ -58,17 +64,25 @@ public abstract class Constants { // TODO: get ALL values
 	public static final int OPERATOR_JOYSTICK_PORT = 2;
 	public static final int SWITCH_BOX_PORT = 3;
 	public static final double JOYSTICK_DEADBAND = 0.2;
+	public static final int OPERATOR_OVERRIDE_BTN = 7;
 
 	// CAN Addresses TODO: Get Values
+	public static final int INTAKE_CAN_ADDRESS = 0; // TODO: get
+	public static final int SHOOTER_CAN_ADDRESS = 1; // TODO: get
+	public static final int CLIMBER_CAN_ADDRESS = 2; // TODO: get
 
 	// Inversions TODO: get
 	public static final boolean RIGHT_DRIVE_MOTORS_INVERTED = false;
 	public static final boolean LEFT_DRIVE_MOTORS_INVERTED = true;
 	public static final boolean LEFT_ENCODER_INVERTED = true;
 	public static final boolean RIGHT_ENCODER_INVERTED = false;
+	public static final boolean INTAKE_MOTOR_INVERTED = true;
+	public static final boolean SHOOTER_MOTOR_INVERTED = false;
+	public static final boolean CLIMB_MOTOR_INVERTED = false;
 
 	// Pneumatic Constants TODO: get
 	public static final int LEFT_CYLINDER_SOLENOID_CHANNEL = 0;
 	public static final int RIGHT_CYLINDER_SOLENOID_CHANNEL = 1;
+	public static final int GRIPPER_SOLENOID_CHANNEL = 2;
 
 }

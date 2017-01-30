@@ -14,6 +14,7 @@ public abstract class VisionConstants extends Constants {
 	static final float CENTER_Y_MAXIMUM_DEVIATION = 1.5f;
 	static final float DISTORTION_DEADBAND = 0.0085f;
 	static final Color TAPE_LOWER_THRESHOLD_COLOR = new Color(230, 245, 230);
+	static final String DEFAULT_PIC_DIRECTORY = "/home/pi/Vision";
 
 	public static final String LINE_SPREAD = "lineSpread";
 	public static final String CENTER_X = "centerX";

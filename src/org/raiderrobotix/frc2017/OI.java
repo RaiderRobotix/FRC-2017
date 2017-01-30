@@ -11,6 +11,8 @@ public final class OI {
 	// ===== Robot Mechanisms =====
 	private final Drivebase m_drives;
 	private final GearCollector m_collector;
+	private final Climber m_climber;
+	private final FuelHandler m_fuelHandler;
 
 	// ===== Joysticks =====
 	private final Joystick m_leftStick;
@@ -20,6 +22,8 @@ public final class OI {
 	public OI() {
 		m_drives = Drivebase.getInstance();
 		m_collector = GearCollector.getInstance();
+		m_climber = Climber.getInstance();
+		m_fuelHandler = FuelHandler.getInstance();
 
 		m_leftStick = new Joystick(Constants.LEFT_JOYSTICK_PORT);
 		m_rightStick = new Joystick(Constants.RIGHT_JOYSTICK_PORT);
@@ -37,7 +41,7 @@ public final class OI {
 
 	public void enableTeleopControls() {
 		// =========== RESETS ===========
-		if (getOperatorButton(2)) { // TODO: change
+		if (getRightButton(8)) {
 			m_drives.resetEncoders();
 			m_drives.resetNavX();
 		}
@@ -57,12 +61,40 @@ public final class OI {
 		}
 
 		// =========== GEAR COLLECTOR ===========
-		if (operatorTriggerIsFalling()) {
+		if (operatorTriggerIsRising()) {
 			if (m_collector.isOut()) {
 				m_collector.closeCollector();
 			} else {
 				m_collector.openCollector();
 			}
+		}
+
+		// =========== CLIMBER ===========
+		if (getOperatorButton(11)) {
+			m_climber.startMotor(getOperatorButton(Constants.OPERATOR_OVERRIDE_BTN));
+		} else {
+			m_climber.stopMotor();
+		}
+
+		if (getOperatorButton(12)) {
+			m_climber.openGripper();
+		} else {
+			m_climber.closeGripper();
+		}
+
+		// =========== FUEL HANDLER ===========
+		if (getOperatorButton(2)) {
+			m_fuelHandler.intakeFuel(getOperatorButton(Constants.OPERATOR_OVERRIDE_BTN));
+		} else {
+			m_fuelHandler.stopIntake();
+		}
+
+		if (getOperatorButton(3)) {
+			m_fuelHandler.setShooterSpeed(Constants.SHOOTER_HIGH_SPEED);
+		} else if (getOperatorButton(4)) {
+			m_fuelHandler.setShooterSpeed(Constants.SHOOTER_LOW_SPEED);
+		} else {
+			m_fuelHandler.setShooterSpeed(0.0);
 		}
 	}
 
@@ -86,7 +118,7 @@ public final class OI {
 		return m_operatorStick.getTrigger();
 	}
 
-	public boolean operatorTriggerIsFalling() {
+	public boolean operatorTriggerIsRising() {
 		return m_operatorStick.getTrigger() && (!m_lastOperatorTriggerValue);
 	}
 

@@ -1,6 +1,6 @@
 package org.raiderrobotix.frc2017;
 
-import org.raiderrobotix.vision.ImageNetworkProperties;
+import org.raiderrobotix.vision.NetworkImageProperties;
 import org.raiderrobotix.vision.Size;
 import org.raiderrobotix.vision.VisionConstants;
 
@@ -8,12 +8,12 @@ public final class CameraSetup {
 
 	private static CameraSetup m_instance;
 
-	private final ImageNetworkProperties m_props;
+	private final NetworkImageProperties m_props;
 	private final Drivebase m_drives;
 	private int m_step = 0;
 
 	private CameraSetup() {
-		m_props = ImageNetworkProperties.getInstance();
+		m_props = NetworkImageProperties.getInstance();
 		m_drives = Drivebase.getInstance();
 	}
 

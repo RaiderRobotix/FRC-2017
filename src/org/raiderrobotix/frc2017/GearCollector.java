@@ -2,7 +2,7 @@ package org.raiderrobotix.frc2017;
 
 import edu.wpi.first.wpilibj.Solenoid;
 
-public class GearCollector {
+public final class GearCollector {
 
 	private static GearCollector m_instance;
 

@@ -14,11 +14,11 @@ public final class FRC2017ImageHandler extends BufferedImageUtilities {
 	private float m_distortion;
 	private float m_lineSpread;
 	private int m_width;
-	private final ImageNetworkProperties m_props;
+	private final NetworkImageProperties m_props;
 
 	public FRC2017ImageHandler(BufferedImage img) {
 		m_image = img;
-		m_props = ImageNetworkProperties.getInstance();
+		m_props = NetworkImageProperties.getInstance();
 		update();
 	}
 

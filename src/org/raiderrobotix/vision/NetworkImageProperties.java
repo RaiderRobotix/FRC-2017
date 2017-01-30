@@ -5,22 +5,22 @@ import java.util.Properties;
 /**
  * Holds data for images in FRC's NetworkTables and Properties.
  */
-public class ImageNetworkProperties extends Properties {
+public class NetworkImageProperties extends Properties {
 
 	private static final long serialVersionUID = 1L;
-	private static ImageNetworkProperties m_instance;
+	private static NetworkImageProperties m_instance;
 
 	// private final NetworkTable m_imageSizeTable; TODO: uncomment
 
-	private ImageNetworkProperties() {
+	private NetworkImageProperties() {
 		// m_imageSizeTable =
 		// NetworkTable.getTable(VisionConstants.CAMERA_NETWORK_TABLE);
 		// TODO: uncomment
 	}
 
-	public static ImageNetworkProperties getInstance() {
+	public static NetworkImageProperties getInstance() {
 		if (m_instance == null) {
-			m_instance = new ImageNetworkProperties();
+			m_instance = new NetworkImageProperties();
 		}
 		return m_instance;
 	}
