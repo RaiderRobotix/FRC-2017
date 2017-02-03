@@ -8,12 +8,13 @@ import java.awt.image.BufferedImage;
 public final class FRC2017ImageHandler extends BufferedImageUtilities {
 
 	private BufferedImage m_image;
-	private float m_leftCenterX;
-	private float m_rightCenterX;
-	private float m_centerX;
+	private int m_leftCenterX;
+	private int m_rightCenterX;
+	private int m_centerX;
+	private int m_centerY;
 	private float m_distortion;
-	private float m_lineSpread;
 	private int m_width;
+	private int m_height;
 	private final NetworkImageProperties m_props;
 
 	public FRC2017ImageHandler(BufferedImage img) {
@@ -24,21 +25,16 @@ public final class FRC2017ImageHandler extends BufferedImageUtilities {
 
 	public void update() {
 		m_width = m_image.getWidth();
-		m_leftCenterX = ((float) getCenter( // Get the centers of the two
-											// different pieces of tape.
-				getTruthTable(xCut(m_image, 0, (m_width / 2) - 1),
-						VisionConstants.TAPE_LOWER_THRESHOLD_COLOR.getRGB()))[0])
-				/ ((float) m_width);
-		m_rightCenterX = ((float) m_width + getCenter(getTruthTable(xCut(m_image, (m_width / 2), m_width - 1),
-				VisionConstants.TAPE_LOWER_THRESHOLD_COLOR.getRGB()))[0]) / ((float) m_width);
-		m_centerX = ((float) getCenter(getTruthTable(m_image, VisionConstants.TAPE_LOWER_THRESHOLD_COLOR.getRGB()))[0])
-				/ ((float) m_width); // Center of tape structure
-		m_distortion = percentAboveThreshold( // amount turned
-				xCut(m_image, 0, (m_width / 2) - 1), VisionConstants.TAPE_LOWER_THRESHOLD_COLOR.getRGB())
-				- percentAboveThreshold(xCut(m_image, m_width / 2, m_width - 1),
-						VisionConstants.TAPE_LOWER_THRESHOLD_COLOR.getRGB());
-		m_lineSpread = m_rightCenterX - m_leftCenterX; // length between centers
-														// of tape pieces
+		m_height = m_image.getHeight();
+		int threshold = VisionConstants.TAPE_LOWER_THRESHOLD_COLOR.getRGB();
+		int[] center = getCenter(getTruthTable(m_image, threshold));
+		m_centerX = center[0];
+		m_centerY = center[1];
+		BufferedImage left = xCut(m_image, 0, m_centerX);
+		m_leftCenterX = getCenter(getTruthTable(left, threshold))[0];
+		BufferedImage right = xCut(m_image, m_centerX, m_width - 1);
+		m_rightCenterX = getCenter(getTruthTable(right, threshold))[0];
+		m_distortion = percentAboveThreshold(left, threshold) - percentAboveThreshold(right, threshold);
 	}
 
 	public void update(BufferedImage img) {
@@ -46,43 +42,52 @@ public final class FRC2017ImageHandler extends BufferedImageUtilities {
 		update();
 	}
 
-	public Size getLineSpread() {
-		if (m_lineSpread < VisionConstants.TAPE_DISTANCE_LOWER_LIMIT) {
-			return Size.TOO_SMALL;
+	public Size getDistortion() {
+		if (m_distortion > VisionConstants.DISTORTION_THRESHOLD) {
+			return Size.TOO_CLOCKWISE;
+		} else if (m_distortion < VisionConstants.DISTORTION_THRESHOLD) {
+			return Size.TOO_COUNTERCLOCKWISE;
+		} else {
+			return Size.IN_RANGE;
 		}
-		if (m_lineSpread > VisionConstants.TAPE_DISTANCE_UPPER_LIMIT) {
-			return Size.TOO_LARGE;
-		}
-		if (m_lineSpread < 0.0f) {
-			return Size.ERROR;
-		}
-		return Size.IN_RANGE;
 	}
 
 	public Size getCenterX() {
-		if (m_centerX < (m_width / 2) - VisionConstants.CENTER_X_MAXIMUM_DEVIATION) {
-			return Size.TOO_LEFT;
+		float leftCenterX = ((float) m_leftCenterX) / ((float) m_width);
+		float rightCenterX = ((float) m_rightCenterX) / ((float) m_width);
+		float centerX = ((float) m_centerX) / ((float) m_width);
+		if (rightCenterX - leftCenterX <= VisionConstants.TAPE_SIZE_LIMIT) {
+			if (centerX > 0.5f) {
+				return Size.TOO_LEFT;
+			} else {
+				return Size.TOO_RIGHT;
+			}
+		} else {
+			if (centerX > 0.5f + VisionConstants.ALLOWABLE_CENTER_RANGE_X) {
+				return Size.TOO_RIGHT;
+			} else if (centerX < 0.5f - VisionConstants.ALLOWABLE_CENTER_RANGE_X) {
+				return Size.TOO_LEFT;
+			} else {
+				return Size.IN_RANGE;
+			}
 		}
-		if (m_centerX > (m_width / 2) + VisionConstants.CENTER_X_MAXIMUM_DEVIATION) {
-			return Size.TOO_RIGHT;
-		}
-		return Size.IN_RANGE;
 	}
 
-	public Size getDistortion() {
-		if (m_distortion > VisionConstants.DISTORTION_DEADBAND) {
-			return Size.TOO_CLOCKWISE;
+	public Size getCenterY() {
+		float centerY = ((float) m_centerY) / ((float) m_height);
+		if (centerY > VisionConstants.CENTER_Y_POINT + VisionConstants.ALLOWABLE_CENTER_RANGE_Y) {
+			return Size.TOO_FAR;
+		} else if (centerY < VisionConstants.CENTER_Y_POINT - VisionConstants.ALLOWABLE_CENTER_RANGE_Y) {
+			return Size.TOO_CLOSE;
+		} else {
+			return Size.IN_RANGE;
 		}
-		if (m_distortion < (-1 * VisionConstants.DISTORTION_DEADBAND)) {
-			return Size.TOO_COUNTERCLOCKWISE;
-		}
-		return Size.IN_RANGE;
 	}
 
 	public void writeImageData() {
 		m_props.setProperty(VisionConstants.DISTORTION, getDistortion().getByte());
-		m_props.setProperty(VisionConstants.LINE_SPREAD, getLineSpread().getByte());
 		m_props.setProperty(VisionConstants.CENTER_X, getCenterX().getByte());
+		m_props.setProperty(VisionConstants.CENTER_Y, getCenterY().getByte());
 	}
 
 }

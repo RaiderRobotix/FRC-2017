@@ -10,7 +10,7 @@ public final class OI {
 
 	// ===== Robot Mechanisms =====
 	private final Drivebase m_drives;
-	private final GearCollector m_collector;
+	private final GearCollector m_gearCollector;
 	private final Climber m_climber;
 	private final FuelHandler m_fuelHandler;
 
@@ -18,10 +18,10 @@ public final class OI {
 	private final Joystick m_leftStick;
 	private final Joystick m_rightStick;
 	private final Joystick m_operatorStick;
-
+	
 	public OI() {
 		m_drives = Drivebase.getInstance();
-		m_collector = GearCollector.getInstance();
+		m_gearCollector = GearCollector.getInstance();
 		m_climber = Climber.getInstance();
 		m_fuelHandler = FuelHandler.getInstance();
 
@@ -62,10 +62,10 @@ public final class OI {
 
 		// =========== GEAR COLLECTOR ===========
 		if (operatorTriggerIsRising()) {
-			if (m_collector.isOut()) {
-				m_collector.closeCollector();
+			if (m_gearCollector.isOut()) {
+				m_gearCollector.closeCollector();
 			} else {
-				m_collector.openCollector();
+				m_gearCollector.openCollector();
 			}
 		}
 

@@ -49,6 +49,8 @@ public final class CameraSetup {
 			if (Size.IN_RANGE.equals(m_props.getSizeProperty(VisionConstants.CENTER_X))) {
 				m_drives.setSpeed(0.0);
 				m_step += 2;
+				m_drives.resetEncoders();
+				m_drives.resetNavX();
 			}
 			m_step++;
 		} else if (m_step == 3) {
@@ -65,12 +67,11 @@ public final class CameraSetup {
 				m_step -= 3;
 			}
 		} else if (m_step == 5) {
-			if (Size.IN_RANGE.equals(m_props.getSizeProperty(VisionConstants.LINE_SPREAD))) {
+			if (Size.IN_RANGE.equals(m_props.getSizeProperty(VisionConstants.CENTER_Y))) {
 				m_drives.setSpeed(0.0);
-				m_step++;
 			} else {
-				m_drives.setSpeed(Math.abs(Constants.VISION_DRIVE_SPEED)
-						* (Size.TOO_SMALL.equals(m_props.getSizeProperty(VisionConstants.LINE_SPREAD)) ? -1.0 : 1.0));
+				m_drives.setSpeed(Constants.VISION_FORWARD_ADJUSTMENT_SPEED
+						* (Size.TOO_FAR.equals(m_props.getSizeProperty(VisionConstants.CENTER_Y)) ? 1.0 : -1.0));
 			}
 		} else {
 			m_drives.setSpeed(0.0);
@@ -78,14 +79,6 @@ public final class CameraSetup {
 			return true;
 		}
 		return false;
-	}
-
-	public void lightOn() {
-		// TODO: implement light logic
-	}
-
-	public void lightOff() {
-		// TODO: implement light logic
 	}
 
 }

@@ -42,7 +42,7 @@ public class NetworkImageProperties extends Properties {
 	public void updateProperties() {
 		updateProperty(VisionConstants.CENTER_X);
 		updateProperty(VisionConstants.DISTORTION);
-		updateProperty(VisionConstants.LINE_SPREAD);
+		updateProperty(VisionConstants.CENTER_Y);
 	}
 
 	private void updateProperty(String key) {

@@ -10,7 +10,7 @@ public final class Robot extends IterativeRobot {
 	private AutonController m_autonController;
 	private OI m_OI;
 	private Drivebase m_drives;
-	private CameraSetup m_camera;
+	private GearCollector m_gearCollector;
 
 	// ====== Auton Logic ======
 	private SendableChooser<Integer> m_autonChooser;
@@ -21,7 +21,7 @@ public final class Robot extends IterativeRobot {
 		m_autonController = AutonController.getInstance();
 		m_OI = OI.getInstance();
 		m_drives = Drivebase.getInstance();
-		m_camera = CameraSetup.getInstance();
+		m_gearCollector = GearCollector.getInstance();
 
 		// ===== RESETS =====
 		m_drives.resetNavX();
@@ -30,23 +30,22 @@ public final class Robot extends IterativeRobot {
 		// ===== AUTON STUFF ===== TODO: Fix Autons
 		m_autonChooser = new SendableChooser<Integer>();
 		m_autonChooser.addObject("-1: Do Nothing", -1);
-		m_autonChooser.addObject("21: Use FTP'd File", 21);
+		m_autonChooser.addObject("21: Use FTP'd File", 20);
 		SmartDashboard.putData("Auton Key", m_autonChooser);
 	}
 
 	private void update() {
 		// Send data to the Smart Dashboard
-		SmartDashboard.putNumber("Left Encoder",
-				m_drives.getLeftEncoderDistance());
-		SmartDashboard.putNumber("Right Encoder",
-				m_drives.getRightEncoderDistance());
-		SmartDashboard.putNumber("Gyro", m_drives.getGyroAngle());
-		SmartDashboard.putNumber("Auton Chosen",
-				SmartDashboard.getNumber("Choose Auton", -1));
+		SmartDashboard.putNumber("Left Encoder", m_drives.getLeftEncoderDistance());
+		SmartDashboard.putNumber("Right Encoder", m_drives.getRightEncoderDistance());
+		SmartDashboard.putNumber("Gyro Heading", m_drives.getGyroAngle());
+		SmartDashboard.putNumber("Auton Chosen", SmartDashboard.getNumber("Choose Auton", -1));
+		SmartDashboard.putBoolean("Gear Collector Out?", m_gearCollector.isOut());
+		SmartDashboard.putBoolean("Brakes In?", m_drives.brakesAreOn());
 
 		if (this.isDisabled() || this.isAutonomous()) {
 			m_autonChosen = m_autonController.getAutonChosen();
-			System.out.println("Auton Chosen: " + m_autonChosen);
+			System.out.printf("Auton Chosen: %d\n", m_autonChosen);
 		}
 	}
 
@@ -54,7 +53,6 @@ public final class Robot extends IterativeRobot {
 		m_drives.brakesOff();
 		m_autonController.resetStep();
 		m_drives.resetNavX();
-		m_camera.lightOn();
 	}
 
 	public void autonomousPeriodic() {
@@ -79,6 +77,7 @@ public final class Robot extends IterativeRobot {
 
 	public void testPeriodic() {
 		m_drives.brakesOff();
+		update();
 	}
 
 }

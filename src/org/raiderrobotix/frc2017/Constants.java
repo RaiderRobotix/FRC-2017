@@ -55,6 +55,8 @@ public abstract class Constants { // TODO: get ALL values
 	public static final double VISION_DRIVE_SPEED = 0.4;
 	public static final double VISION_DRIVE_FIX_LENGTH = 6.0;
 	public static final double VISION_TURN_FIX_ANGLE = 7.5;
+	public static final double VISION_FORWARD_ADJUSTMENT_SPEED = 0.35; // TODO:
+																		// get
 	public static final String CAMERA_NETWORK_TABLE = "IMPLEMENT"; // TODO:
 																	// implement
 

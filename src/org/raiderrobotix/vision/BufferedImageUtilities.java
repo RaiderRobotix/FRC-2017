@@ -43,10 +43,10 @@ public abstract class BufferedImageUtilities {
 
 	public static final BufferedImage xCut(BufferedImage img, int x1, int x2) {
 		// Cut an image horizontally.
-		BufferedImage ret = new BufferedImage((x2 - x1) + 1, img.getHeight(), BufferedImage.TYPE_INT_ARGB);
-		for (int x = x1; x <= x2; x++) {
+		BufferedImage ret = new BufferedImage((x2 - x1) + 1, img.getHeight(), BufferedImage.TYPE_INT_RGB);
+		for (int x = 0; x < ret.getWidth(); x++) {
 			for (int y = 0; y < img.getHeight(); y++) {
-				ret.setRGB(x - x1, y, img.getRGB(x1, y));
+				ret.setRGB(x, y, img.getRGB(x + x1, y));
 			}
 		}
 		return ret;
@@ -54,10 +54,10 @@ public abstract class BufferedImageUtilities {
 
 	public static final BufferedImage yCut(BufferedImage img, int y1, int y2) {
 		// Cut an image vertically.
-		BufferedImage ret = new BufferedImage(img.getWidth(), (y2 - y1) + 1, BufferedImage.TYPE_INT_ARGB);
+		BufferedImage ret = new BufferedImage(img.getWidth(), (y2 - y1) + 1, BufferedImage.TYPE_INT_RGB);
 		for (int x = 0; x < img.getWidth(); x++) {
-			for (int y = y1; y <= y2; y++) {
-				ret.setRGB(x, y - y1, img.getRGB(x, y1));
+			for (int y = 0; y < ret.getHeight(); y++) {
+				ret.setRGB(x, y, img.getRGB(x, y + y1));
 			}
 		}
 		return ret;
@@ -72,7 +72,6 @@ public abstract class BufferedImageUtilities {
 				}
 			}
 		}
-		System.out.printf("num true: %f\n", (ret / ((float) table.length * table[0].length)));
 		return ret / ((float) table.length * table[0].length);
 	}
 
@@ -88,7 +87,7 @@ public abstract class BufferedImageUtilities {
 	 *            search.
 	 * @return new float[]{xCoord, yCoord}; (the center)
 	 */
-	public static final float[] getCenter(boolean[][] table) {
+	public static final int[] getCenter(boolean[][] table) {
 		float numTrue = percentTrue(table);
 		numTrue *= (((float) table.length) * ((float) table[0].length));
 		float retX = 0.0f;
@@ -103,7 +102,7 @@ public abstract class BufferedImageUtilities {
 		}
 		retX /= numTrue;
 		retY /= numTrue;
-		return new float[] { retX, retY };
+		return new int[] { (int) retX, (int) retY };
 	}
 
 	public static void writeImage(BufferedImage img, String path) throws IOException {

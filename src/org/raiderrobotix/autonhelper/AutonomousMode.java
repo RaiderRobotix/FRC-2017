@@ -34,7 +34,7 @@ public final class AutonomousMode extends ArrayList<Instruction> {
 		try {
 			Drivebase drives = Drivebase.getInstance();
 			CameraSetup camera = CameraSetup.getInstance();
-			GearCollector collector = GearCollector.getInstance();
+			GearCollector gearCollector = GearCollector.getInstance();
 			FuelHandler fuelHandler = FuelHandler.getInstance();
 			Instruction i = this.get(0);
 			switch (Integer.parseInt(i.getNext())) {
@@ -54,10 +54,10 @@ public final class AutonomousMode extends ArrayList<Instruction> {
 			case Mechanism.GEAR_COLLECTOR:
 				switch (Integer.parseInt(i.getNext())) {
 				case Mechanism.Collector.OPEN:
-					collector.openCollector();
+					gearCollector.openCollector();
 					break;
 				case Mechanism.Collector.CLOSE:
-					collector.closeCollector();
+					gearCollector.closeCollector();
 					break;
 				}
 				break;
