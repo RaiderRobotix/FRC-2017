@@ -76,12 +76,6 @@ public final class OI {
 			m_climber.stopMotor();
 		}
 
-		if (getOperatorButton(12)) {
-			m_climber.openGripper();
-		} else {
-			m_climber.closeGripper();
-		}
-
 		// =========== FUEL HANDLER ===========
 		if (getOperatorButton(2)) {
 			m_fuelHandler.intakeFuel(getOperatorButton(Constants.OPERATOR_OVERRIDE_BTN));

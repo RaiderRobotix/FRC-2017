@@ -83,8 +83,6 @@ public abstract class Constants { // TODO: get ALL values
 	public static final boolean CLIMB_MOTOR_INVERTED = false;
 
 	// Pneumatic Constants TODO: get
-	public static final int LEFT_CYLINDER_SOLENOID_CHANNEL = 0;
-	public static final int RIGHT_CYLINDER_SOLENOID_CHANNEL = 1;
-	public static final int GRIPPER_SOLENOID_CHANNEL = 2;
+	public static final int GEAR_CYLINDERS_SOLENOID_CHANNEL = 0;
 
 }
