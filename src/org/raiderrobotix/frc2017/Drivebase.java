@@ -3,7 +3,7 @@ package org.raiderrobotix.frc2017;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.SPI.Port;
+import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.VictorSP;
 
@@ -17,10 +17,10 @@ public final class Drivebase {
 	private final Servo m_leftBrake;
 	private final Encoder m_leftEncoder;
 	private final Encoder m_rightEncoder;
-
+	private final AHRS m_navX;
+	
 	private boolean m_brakesOn;
 	private boolean m_drivingStep;
-	private AHRS m_navX;
 	private double m_headingYaw;
 
 	private Drivebase() {
@@ -33,10 +33,10 @@ public final class Drivebase {
 		m_leftBrake = new Servo(Constants.LEFT_BRAKE_PWM);
 		m_rightBrake = new Servo(Constants.RIGHT_BRAKE_PWM);
 
-		m_leftEncoder = new Encoder(Constants.LEFT_ENCODER_PWM_A,
-				Constants.LEFT_ENCODER_PWM_B, Constants.LEFT_ENCODER_INVERTED);
-		m_rightEncoder = new Encoder(Constants.RIGHT_ENCODER_PWM_A,
-				Constants.RIGHT_ENCODER_PWM_B, Constants.RIGHT_ENCODER_INVERTED);
+		m_leftEncoder = new Encoder(Constants.LEFT_ENCODER_PWM_A, Constants.LEFT_ENCODER_PWM_B,
+				Constants.LEFT_ENCODER_INVERTED);
+		m_rightEncoder = new Encoder(Constants.RIGHT_ENCODER_PWM_A, Constants.RIGHT_ENCODER_PWM_B,
+				Constants.RIGHT_ENCODER_INVERTED);
 
 		m_leftEncoder.setDistancePerPulse(Constants.INCHES_PER_COUNT);
 		m_rightEncoder.setDistancePerPulse(Constants.INCHES_PER_COUNT);
@@ -56,10 +56,8 @@ public final class Drivebase {
 	}
 
 	public void setSpeed(double leftSpeed, double rightSpeed) {
-		m_leftDrives.set(leftSpeed
-				* (Constants.RIGHT_DRIVE_MOTORS_INVERTED ? -1.0 : 1.0));
-		m_rightDrives.set(rightSpeed
-				* (Constants.LEFT_DRIVE_MOTORS_INVERTED ? -1.0 : 0));
+		m_leftDrives.set(leftSpeed * (Constants.RIGHT_DRIVE_MOTORS_INVERTED ? -1.0 : 1.0));
+		m_rightDrives.set(rightSpeed * (Constants.LEFT_DRIVE_MOTORS_INVERTED ? -1.0 : 1.0));
 	}
 
 	public void brakesOn() {
@@ -79,13 +77,11 @@ public final class Drivebase {
 	}
 
 	public double getLeftEncoderDistance() {
-		return m_leftEncoder.getDistance()
-				* (Constants.LEFT_ENCODER_INVERTED ? -1.0 : 1.0);
+		return m_leftEncoder.getDistance() * (Constants.LEFT_ENCODER_INVERTED ? -1.0 : 1.0);
 	}
 
 	public double getRightEncoderDistance() {
-		return m_rightEncoder.getDistance()
-				* (Constants.RIGHT_ENCODER_INVERTED ? -1.0 : 1.0);
+		return m_rightEncoder.getDistance() * (Constants.RIGHT_ENCODER_INVERTED ? -1.0 : 1.0);
 	}
 
 	public double getAverageEncoderDistance() {
@@ -114,8 +110,7 @@ public final class Drivebase {
 		} else {
 			speed = Math.abs(speed) * (angle / Math.abs(angle));
 			setSpeed(speed, -speed);
-			if (Math.abs(getGyroAngle()) > Math.abs(angle)
-					- Constants.TURN_ANGLE_TOLERANCE) {
+			if (Math.abs(getGyroAngle()) > Math.abs(angle) - Constants.TURN_ANGLE_TOLERANCE) {
 				m_drivingStep = false;
 				setSpeed(0.0);
 			}
@@ -143,8 +138,7 @@ public final class Drivebase {
 			speed = Math.abs(speed) * (distance / Math.abs(distance));
 			double leftSpeed = speed;
 			double rightSpeed = speed;
-			if (getAverageEncoderDistance()
-					+ Constants.DRIVE_STRAIGHT_SLOW_RANGE >= distance) {
+			if (getAverageEncoderDistance() + Constants.DRIVE_STRAIGHT_SLOW_RANGE >= distance) {
 				// If within slow range, set to slow speed
 				setToSlowSpeed(speed > 0.0);
 			} else {

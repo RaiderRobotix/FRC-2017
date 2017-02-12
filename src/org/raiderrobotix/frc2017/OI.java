@@ -6,8 +6,6 @@ public final class OI {
 
 	private static OI m_instance;
 
-	private boolean m_lastOperatorTriggerValue;
-
 	// ===== Robot Mechanisms =====
 	private final Drivebase m_drives;
 	private final GearCollector m_gearCollector;
@@ -18,7 +16,7 @@ public final class OI {
 	private final Joystick m_leftStick;
 	private final Joystick m_rightStick;
 	private final Joystick m_operatorStick;
-	
+
 	public OI() {
 		m_drives = Drivebase.getInstance();
 		m_gearCollector = GearCollector.getInstance();
@@ -28,8 +26,6 @@ public final class OI {
 		m_leftStick = new Joystick(Constants.LEFT_JOYSTICK_PORT);
 		m_rightStick = new Joystick(Constants.RIGHT_JOYSTICK_PORT);
 		m_operatorStick = new Joystick(Constants.OPERATOR_JOYSTICK_PORT);
-
-		m_lastOperatorTriggerValue = false;
 	}
 
 	public static OI getInstance() {
@@ -45,7 +41,6 @@ public final class OI {
 			m_drives.resetEncoders();
 			m_drives.resetNavX();
 		}
-		m_lastOperatorTriggerValue = getOperatorTrigger();
 
 		// =========== DRIVES ===========
 		if (getLeftTrigger()) {
@@ -61,12 +56,10 @@ public final class OI {
 		}
 
 		// =========== GEAR COLLECTOR ===========
-		if (operatorTriggerIsRising()) {
-			if (m_gearCollector.isOut()) {
-				m_gearCollector.closeCollector();
-			} else {
-				m_gearCollector.openCollector();
-			}
+		if (getOperatorTrigger()) {
+			m_gearCollector.openCollector();
+		} else if (getOperatorButton(3)) {
+			m_gearCollector.closeCollector();
 		}
 
 		// =========== CLIMBER ===========
@@ -77,16 +70,24 @@ public final class OI {
 		}
 
 		// =========== FUEL HANDLER ===========
-		if (getOperatorButton(2)) {
-			m_fuelHandler.intakeFuel(getOperatorButton(Constants.OPERATOR_OVERRIDE_BTN));
+		if (getOperatorButton(Constants.OPERATOR_OVERRIDE_BTN)) {
+			if(getOperatorButton(8)) {
+				m_fuelHandler.intakeFuel(true);
+			} else if (getOperatorButton(9)) {
+				m_fuelHandler.stopIntake();
+			} else {
+				m_fuelHandler.intakeFuel();
+			}
 		} else {
-			m_fuelHandler.stopIntake();
+			m_fuelHandler.intakeFuel();
 		}
 
-		if (getOperatorButton(3)) {
-			m_fuelHandler.setShooterSpeed(Constants.SHOOTER_HIGH_SPEED);
-		} else if (getOperatorButton(4)) {
-			m_fuelHandler.setShooterSpeed(Constants.SHOOTER_LOW_SPEED);
+		if (getOperatorButton(4)) {
+			m_fuelHandler.setShooterSpeed(
+					Constants.SHOOTER_HIGH_SPEED * (getOperatorButton(Constants.OPERATOR_OVERRIDE_BTN) ? -1.0 : 1.0));
+		} else if (getOperatorButton(6)) {
+			m_fuelHandler.setShooterSpeed(
+					Constants.SHOOTER_LOW_SPEED * (getOperatorButton(Constants.OPERATOR_OVERRIDE_BTN) ? -1.0 : 1.0));
 		} else {
 			m_fuelHandler.setShooterSpeed(0.0);
 		}
@@ -110,10 +111,6 @@ public final class OI {
 
 	public boolean getOperatorTrigger() {
 		return m_operatorStick.getTrigger();
-	}
-
-	public boolean operatorTriggerIsRising() {
-		return m_operatorStick.getTrigger() && (!m_lastOperatorTriggerValue);
 	}
 
 	public boolean getOperatorButton(int btn) {

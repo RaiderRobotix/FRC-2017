@@ -1,12 +1,11 @@
 package org.raiderrobotix.autonhelper;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
 
-import org.raiderrobotix.frc2017.CameraSetup;
-import org.raiderrobotix.frc2017.Constants;
 import org.raiderrobotix.frc2017.Drivebase;
 import org.raiderrobotix.frc2017.FuelHandler;
 import org.raiderrobotix.frc2017.GearCollector;
@@ -14,75 +13,80 @@ import org.raiderrobotix.frc2017.GearCollector;
 public final class AutonomousMode extends ArrayList<Instruction> {
 
 	private static final long serialVersionUID = 1L;
+	private final Drivebase m_drives;
+	private final GearCollector m_gearCollector;
+	private final FuelHandler m_fuelHandler;
 
 	@SuppressWarnings("unchecked")
-	public AutonomousMode() throws IOException, ClassNotFoundException {
-		ObjectInputStream in = new ObjectInputStream(new FileInputStream(Constants.AUTON_FILE_PATH));
+	public AutonomousMode(int autonNumber, File dir) throws IOException, ClassNotFoundException {
+		m_drives = Drivebase.getInstance();
+		m_gearCollector = GearCollector.getInstance();
+		m_fuelHandler = FuelHandler.getInstance();
+		String filePath = "";
+		checkLoop: for (File i : dir.listFiles()) {
+			if (i.isFile()) {
+				String path = i.getAbsolutePath();
+				try {
+					path = path.substring(path.lastIndexOf("/"), path.indexOf("_"));
+					if (Integer.parseInt(path) == autonNumber) {
+						filePath = path;
+						break checkLoop;
+					}
+				} catch (Exception e) {
+					continue;
+				}
+			}
+		}
+		ObjectInputStream in = new ObjectInputStream(new FileInputStream(filePath));
 		for (Instruction i : (ArrayList<Instruction>) in.readObject()) {
 			this.add(i);
 		}
 		in.close();
 	}
 
-	public AutonomousMode(ArrayList<Instruction> autonList) {
-		for (Instruction i : autonList) {
-			this.add(i);
-		}
-	}
-
 	public double auton(double time) {
 		try {
-			Drivebase drives = Drivebase.getInstance();
-			CameraSetup camera = CameraSetup.getInstance();
-			GearCollector gearCollector = GearCollector.getInstance();
-			FuelHandler fuelHandler = FuelHandler.getInstance();
 			Instruction i = this.get(0);
 			switch (Integer.parseInt(i.getNext())) {
 			case Mechanism.INTAKE:
-				switch(Integer.parseInt(i.getNext())) {
+				switch (Integer.parseInt(i.getNext())) {
 				case Mechanism.Intake.INTAKE_IN:
-					fuelHandler.intakeFuel(false);
+					m_fuelHandler.intakeFuel(false);
 					break;
 				case Mechanism.Intake.INTAKE_OFF:
-					fuelHandler.stopIntake();
+					m_fuelHandler.stopIntake();
 					break;
 				}
 				break;
 			case Mechanism.SHOOTER:
-				fuelHandler.setShooterSpeed(Double.parseDouble(i.getNext()));
+				m_fuelHandler.setShooterSpeed(Double.parseDouble(i.getNext()));
 				break;
 			case Mechanism.GEAR_COLLECTOR:
 				switch (Integer.parseInt(i.getNext())) {
 				case Mechanism.Collector.OPEN:
-					gearCollector.openCollector();
+					m_gearCollector.openCollector();
 					break;
 				case Mechanism.Collector.CLOSE:
-					gearCollector.closeCollector();
+					m_gearCollector.closeCollector();
 					break;
-				}
-				break;
-			case Mechanism.LINE_UP:
-				if (camera.linedUpToScore()) {
-					time = 0.0;
-					this.remove(0);
 				}
 				break;
 			case Mechanism.DRIVES:
-				if (drives.brakesAreOn()) {
-					drives.brakesOff();
+				if (m_drives.brakesAreOn()) {
+					m_drives.brakesOff();
 				}
 				String fn = i.getNext();
 				double value = Double.parseDouble(i.getNext());
 				double speed = Double.parseDouble(i.getNext());
 				switch (Integer.parseInt(fn)) {
 				case Mechanism.Drives.STRAIGHT:
-					if (drives.driveStraight(value, speed)) {
+					if (m_drives.driveStraight(value, speed)) {
 						time = 0.0;
 						this.remove(0);
 					}
 					break;
 				case Mechanism.Drives.TURN:
-					if (drives.turnToAngle(value, speed)) {
+					if (m_drives.turnToAngle(value, speed)) {
 						time = 0.0;
 						this.remove(0);
 					}
@@ -96,11 +100,11 @@ public final class AutonomousMode extends ArrayList<Instruction> {
 				}
 				break;
 			case Mechanism.BRAKES:
-				drives.setSpeed(0.0);
+				m_drives.setSpeed(0.0);
 				if (Integer.parseInt(i.getNext()) == Mechanism.Drives.BRAKES_ON) {
-					drives.brakesOn();
+					m_drives.brakesOn();
 				} else {
-					drives.brakesOff();
+					m_drives.brakesOff();
 				}
 				time = 0.0;
 				this.remove(0);

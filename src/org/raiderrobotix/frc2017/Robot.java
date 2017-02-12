@@ -1,7 +1,8 @@
 package org.raiderrobotix.frc2017;
 
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public final class Robot extends IterativeRobot {
@@ -11,9 +12,10 @@ public final class Robot extends IterativeRobot {
 	private OI m_OI;
 	private Drivebase m_drives;
 	private GearCollector m_gearCollector;
+	private Compressor m_compressor;
+	private PowerDistributionPanel m_pdp;
 
 	// ====== Auton Logic ======
-	private SendableChooser<Integer> m_autonChooser;
 	private int m_autonChosen;
 
 	public void robotInit() {
@@ -22,16 +24,16 @@ public final class Robot extends IterativeRobot {
 		m_OI = OI.getInstance();
 		m_drives = Drivebase.getInstance();
 		m_gearCollector = GearCollector.getInstance();
+		m_compressor = new Compressor(Constants.PCM_CAN_ADDRESS);
+		m_pdp = new PowerDistributionPanel(Constants.PDP_CAN_ADDRESS);
 
 		// ===== RESETS =====
 		m_drives.resetNavX();
 		m_drives.resetEncoders();
+		m_compressor.setClosedLoopControl(true);
 
-		// ===== AUTON STUFF ===== TODO: Fix Autons
-		m_autonChooser = new SendableChooser<Integer>();
-		m_autonChooser.addObject("-1: Do Nothing", -1);
-		m_autonChooser.addObject("21: Use FTP'd File", 20);
-		SmartDashboard.putData("Auton Key", m_autonChooser);
+		// ===== AUTON STUFF =====
+		SmartDashboard.putData("Auton Key", m_autonController.getSendableChooser());
 	}
 
 	private void update() {
@@ -42,6 +44,8 @@ public final class Robot extends IterativeRobot {
 		SmartDashboard.putNumber("Auton Chosen", SmartDashboard.getNumber("Choose Auton", -1));
 		SmartDashboard.putBoolean("Gear Collector Out?", m_gearCollector.isOut());
 		SmartDashboard.putBoolean("Brakes In?", m_drives.brakesAreOn());
+		SmartDashboard.putNumber("Battery Voltage", m_pdp.getVoltage());
+		SmartDashboard.putNumber("Battery Current", m_pdp.getTotalCurrent());
 
 		if (this.isDisabled() || this.isAutonomous()) {
 			m_autonChosen = m_autonController.getAutonChosen();
@@ -53,11 +57,14 @@ public final class Robot extends IterativeRobot {
 		m_drives.brakesOff();
 		m_autonController.resetStep();
 		m_drives.resetNavX();
+		m_gearCollector.closeCollector();
 	}
 
 	public void autonomousPeriodic() {
-		if (m_autonChosen == 21) {
-			m_autonController.useFTPFile();
+		if (m_autonChosen == 1) {
+			m_autonController.test();
+		} else if (m_autonChosen > 1) {
+			m_autonController.useFTPFile(m_autonChosen);
 		}
 		update();
 	}

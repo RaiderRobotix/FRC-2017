@@ -1,17 +1,17 @@
 package org.raiderrobotix.frc2017;
 
-import edu.wpi.first.wpilibj.TalonSRX;
+import com.ctre.CANTalon;
 
 public final class FuelHandler {
 
 	private static FuelHandler m_instance;
 
-	private final TalonSRX m_intake;
-	private final TalonSRX m_shooter;
+	private final CANTalon m_intake;
+	private final CANTalon m_shooter;
 
 	private FuelHandler() {
-		m_intake = new TalonSRX(Constants.INTAKE_CAN_ADDRESS);
-		m_shooter = new TalonSRX(Constants.SHOOTER_CAN_ADDRESS);
+		m_intake = new CANTalon(Constants.INTAKE_CAN_ADDRESS);
+		m_shooter = new CANTalon(Constants.SHOOTER_CAN_ADDRESS);
 	}
 
 	public static FuelHandler getInstance() {
@@ -29,12 +29,16 @@ public final class FuelHandler {
 		m_shooter.set(speed * (Constants.SHOOTER_MOTOR_INVERTED ? -1.0 : 1.0));
 	}
 
+	public void intakeFuel() {
+		intakeFuel(false);
+	}
+	
 	public void intakeFuel(boolean override) {
 		m_intake.set(Constants.FUEL_INTAKE_SPEED * (override ? -1.0 : 1.0));
 	}
 
 	public void stopIntake() {
-		m_intake.setSpeed(0.0);
+		m_intake.set(0.0);
 	}
 
 }

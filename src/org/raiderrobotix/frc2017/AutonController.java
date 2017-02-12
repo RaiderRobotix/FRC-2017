@@ -1,16 +1,18 @@
 package org.raiderrobotix.frc2017;
 
+import java.io.File;
+
 import org.raiderrobotix.autonhelper.AutonomousMode;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
 public final class AutonController {
 
 	private static AutonController m_instance;
 
 	private int m_step;
-	@SuppressWarnings("unused") // TODO: un-suppress
 	private final Drivebase m_drives;
 	@SuppressWarnings("unused")
 	private final GearCollector m_collector;
@@ -60,10 +62,20 @@ public final class AutonController {
 		return n;
 	}
 
-	public void useFTPFile() {
+	public SendableChooser<Integer> getSendableChooser() {
+		SendableChooser<Integer> ret = new SendableChooser<Integer>();
+		ret.addDefault("-1: Do Nothing", -1);
+		for (String i : new File(Constants.AUTON_DATA_RIO_DIRECTORY).list()) {
+			ret.addObject(i.substring(i.lastIndexOf("/") + 1, i.lastIndexOf(".")),
+					Integer.parseInt(i.substring(i.lastIndexOf("/") + 1, i.lastIndexOf("-"))));
+		}
+		return ret;
+	}
+
+	public void useFTPFile(int autonNumber) {
 		if (m_step == 0) {
 			try {
-				m_auton = new AutonomousMode();
+				m_auton = new AutonomousMode(autonNumber, Constants.AUTON_DATA_LOCAL_DIRECTORY);
 				m_timer.start();
 				m_timer.reset();
 				m_step++;
@@ -74,6 +86,22 @@ public final class AutonController {
 			if (m_auton.auton(m_timer.get()) == 0.0) {
 				m_timer.reset();
 			}
+		}
+	}
+
+	public void test() {
+		if (m_step == 0) {
+			m_drives.resetEncoders();
+			m_drives.resetNavX();
+			m_drives.brakesOff();
+			m_step++;
+		} else if (m_step == 1) {
+			if (m_drives.driveStraight(12.0, 0.4)) {
+				m_drives.setSpeed(0.0);
+				m_step++;
+			}
+		} else {
+			m_drives.setSpeed(0.0);
 		}
 	}
 

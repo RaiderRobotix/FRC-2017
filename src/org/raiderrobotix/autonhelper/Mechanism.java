@@ -5,10 +5,9 @@ public abstract class Mechanism {
 	public static final int WAIT = -1;
 	public static final int DRIVES = 0;
 	public static final int BRAKES = 1;
-	public static final int LINE_UP = 2;
-	public static final int GEAR_COLLECTOR = 3;
-	public static final int INTAKE = 4;
-	public static final int SHOOTER = 5;
+	public static final int GEAR_COLLECTOR = 2;
+	public static final int INTAKE = 3;
+	public static final int SHOOTER = 4;
 
 	public abstract class Drives {
 

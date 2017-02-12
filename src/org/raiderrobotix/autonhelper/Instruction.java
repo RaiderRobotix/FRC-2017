@@ -25,5 +25,6 @@ public final class Instruction extends ArrayList<String> {
 		m_counter++;
 		return this.get(m_counter % (this.size()));
 	}
+	
 
 }

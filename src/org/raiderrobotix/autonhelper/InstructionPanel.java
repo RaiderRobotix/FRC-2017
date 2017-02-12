@@ -120,10 +120,6 @@ public final class InstructionPanel extends JPanel {
 					m_extraDataPanel.add(m_valuePanel);
 					m_extraDataPanel.add(new JLabel(""));
 					break;
-				case Mechanism.LINE_UP:
-					m_extraDataPanel.add(new JLabel(""));
-					m_extraDataPanel.add(new JLabel(""));
-					break;
 				case Mechanism.GEAR_COLLECTOR:
 					m_extraDataPanel.add(new JLabel(""));
 					m_extraDataPanel.add(new JLabel(""));
@@ -167,6 +163,35 @@ public final class InstructionPanel extends JPanel {
 		this.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 	}
 
+	public InstructionPanel(int initStep, Instruction i) {
+		this(initStep);
+		int m = Integer.parseInt(i.get(0));
+		for (String j : m_mechanismMapping.keySet()) {
+			if (m == m_mechanismMapping.get(j).get(0)) {
+				if (!(m == Mechanism.BRAKES || m == Mechanism.DRIVES || m == Mechanism.INTAKE
+						|| m == Mechanism.GEAR_COLLECTOR)) {
+					m_mechanismDropDown.setSelectedItem(j);
+					break;
+				} else if (Integer.parseInt(i.get(1)) == m_mechanismMapping.get(j).get(1)) {
+					m_mechanismDropDown.setSelectedItem(j);
+					break;
+				}
+			}
+		}
+		m_mechanismDropDown.getActionListeners()[0].actionPerformed(null);
+		int i0 = Integer.parseInt(i.getNext());
+		if (i0 == Mechanism.BRAKES || i0 == Mechanism.DRIVES || i0 == Mechanism.INTAKE
+				|| i0 == Mechanism.GEAR_COLLECTOR) {
+			i.getNext();
+		}
+		if (!(m_extraDataPanel.getComponent(0) instanceof JLabel)) {
+			m_valueField.setText(i.getNext());
+		}
+		if (!(m_extraDataPanel.getComponent(1) instanceof JLabel)) {
+			m_speedField.setText(i.getNext());
+		}
+	}
+
 	/**
 	 * Assign drop down menu items to the correct mechanism IDs for shorthand
 	 * code.
@@ -185,11 +210,6 @@ public final class InstructionPanel extends JPanel {
 		n.add(Mechanism.DRIVES);
 		n.add(Mechanism.Drives.TURN);
 		m_mechanismMapping.put("Drive- Spin", n);
-
-		// Camera- Line Up
-		n = new ArrayList<Integer>();
-		n.add(Mechanism.LINE_UP);
-		m_mechanismMapping.put("Line Up For Gear", n);
 
 		// Open Gear Collector
 		n = new ArrayList<Integer>();

@@ -8,7 +8,13 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -31,6 +37,7 @@ public final class AutonUI extends JFrame {
 	private JButton m_helpButton = new JButton("Constants");
 	private JButton m_ftpButton = new JButton("Send Code to Robot");
 	private JButton m_copyButton = new JButton("Copy Code to Clipboard");
+	private JButton m_openButton = new JButton("Open Auton");
 
 	private AutonUI() {
 		super("Auton Helper");
@@ -44,7 +51,26 @@ public final class AutonUI extends JFrame {
 				updateUI(false);
 			}
 		});
+		m_openButton.addActionListener(new ActionListener() {
+			@SuppressWarnings("unchecked")
+			public void actionPerformed(ActionEvent e) {
+				try {
+					while (m_is.size() != 0) {
+						m_is.remove(0);
+					}
+					int c = 0;
+					for (Instruction i : (ArrayList<Instruction>) new ObjectInputStream(
+							new FileInputStream(Utility.getFile(Constants.AUTON_DATA_LOCAL_DIRECTORY))).readObject()) {
+						m_is.add(new InstructionPanel(++c, i));
+					}
+					updateUI(false);
+				} catch (ClassNotFoundException | IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
 		m_helpButton.addActionListener(new ActionListener() {
+
 			public void actionPerformed(ActionEvent e) {
 				JOptionPane.showMessageDialog(null,
 						new JLabel(
@@ -56,13 +82,19 @@ public final class AutonUI extends JFrame {
 			}
 		});
 		m_ftpButton.addActionListener(new ActionListener() {
+			@SuppressWarnings("resource")
 			public void actionPerformed(ActionEvent e) {
 				ArrayList<Instruction> instructions = new ArrayList<Instruction>();
 				for (InstructionPanel i : m_is) {
 					instructions.add(i.getInstruction());
 				}
 				try {
-					Utility.sendOverFile(instructions);
+					String name = Utility.getName();
+					name += ".dat";
+					Utility.sendOverFile(instructions, name);
+					new ObjectOutputStream(new FileOutputStream(
+							new File(Constants.AUTON_DATA_LOCAL_DIRECTORY.getAbsolutePath(), name).getAbsolutePath()))
+									.writeObject(instructions);
 				} catch (IOException e1) {
 					JOptionPane.showMessageDialog(null,
 							new JLabel("<html>There was an error<br>sending the file.</html>", SwingConstants.CENTER),
@@ -111,11 +143,12 @@ public final class AutonUI extends JFrame {
 		if (init) {
 			m_pane.removeAll();
 			JPanel northernButtonPanel = new JPanel();
-			northernButtonPanel.setLayout(new GridLayout(1, 4, 10, 10));
+			northernButtonPanel.setLayout(new GridLayout(1, 5, 10, 10));
 			northernButtonPanel.add(m_addButton);
 			northernButtonPanel.add(m_ftpButton);
 			northernButtonPanel.add(m_copyButton);
 			northernButtonPanel.add(m_helpButton);
+			northernButtonPanel.add(m_openButton);
 			m_pane.add(northernButtonPanel, BorderLayout.NORTH);
 		} else {
 			try {
@@ -129,7 +162,7 @@ public final class AutonUI extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		AutonUI.getInstance();
+		 AutonUI.getInstance();
 	}
 
 }

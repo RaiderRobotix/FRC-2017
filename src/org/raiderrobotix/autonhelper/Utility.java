@@ -13,8 +13,10 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
+import javax.swing.LookAndFeel;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -27,19 +29,34 @@ public abstract class Utility {
 	 * 
 	 * @return File that was chosen
 	 */
-	public static File getFile() {
+	public static File getFile(File dir) {
+		LookAndFeel orig = UIManager.getLookAndFeel();
 		try {
 			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 		} catch (Exception e) {
 			// Do nothing, as look and feel are just decorative.
 		}
 		JFileChooser fileChooser = new JFileChooser();
+		try {
+			fileChooser.setCurrentDirectory(dir);
+		} catch (NullPointerException e) {
+			// Don't set a current file.
+		}
 		fileChooser.setDialogTitle("Choose a File");
 		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		int a = JFileChooser.APPROVE_OPTION - 1;
 		while (a != JFileChooser.APPROVE_OPTION || fileChooser.getSelectedFile() == null)
 			a = fileChooser.showDialog(null, "Use");
+		try {
+			UIManager.setLookAndFeel(orig);
+		} catch (UnsupportedLookAndFeelException e) {
+			// Shouldn't Happen
+		}
 		return fileChooser.getSelectedFile();
+	}
+
+	public static File getFile() {
+		return getFile(null);
 	}
 
 	/**
@@ -93,8 +110,8 @@ public abstract class Utility {
 	 * @throws IOException
 	 *             Will throw if there is an error with the FTP connection.
 	 */
-	public static void sendOverFile(ArrayList<Instruction> auton) throws IOException {
-		URL url = new URL(Constants.FTP_PREFIX + Constants.AUTON_FILE_PATH);
+	public static void sendOverFile(ArrayList<Instruction> auton, String autonFileName) throws IOException {
+		URL url = new URL(Constants.FTP_PREFIX + Constants.AUTON_DATA_RIO_DIRECTORY + autonFileName);
 		URLConnection conn = url.openConnection();
 		ObjectOutputStream out = new ObjectOutputStream(conn.getOutputStream());
 		out.writeObject(auton);

@@ -134,10 +134,6 @@ public final class InstructionSet extends ArrayList<InstructionPanel> {
 					break;
 				}
 				break;
-			case Mechanism.LINE_UP:
-				ret += "if (m_camera.linedUpToScore()) {\n";
-				extraIndentExists = true;
-				break;
 			case Mechanism.WAIT:
 				ret += "if (m_timer.get() > " + instruction.getNext() + ") {\n";
 				extraIndentExists = true;

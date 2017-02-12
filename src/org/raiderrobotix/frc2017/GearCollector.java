@@ -10,17 +10,17 @@ public final class GearCollector {
 	private boolean m_isOut;
 
 	private GearCollector() {
-		m_cylinders = new Solenoid(Constants.GEAR_CYLINDERS_SOLENOID_CHANNEL);
+		m_cylinders = new Solenoid(Constants.PCM_CAN_ADDRESS, Constants.GEAR_CYLINDERS_SOLENOID_CHANNEL);
 		m_isOut = false;
 	}
-	
+
 	public static GearCollector getInstance() {
-		if(m_instance == null) {
+		if (m_instance == null) {
 			m_instance = new GearCollector();
 		}
 		return m_instance;
 	}
-	
+
 	public boolean isOut() {
 		return m_isOut;
 	}
@@ -29,10 +29,10 @@ public final class GearCollector {
 		m_isOut = true;
 		m_cylinders.set(true);
 	}
-	
+
 	public void closeCollector() {
 		m_isOut = false;
 		m_cylinders.set(false);
 	}
-	
+
 }
