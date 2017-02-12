@@ -64,7 +64,7 @@ public final class AutonController {
 
 	public SendableChooser<Integer> getSendableChooser() {
 		SendableChooser<Integer> ret = new SendableChooser<Integer>();
-		ret.addDefault("-1: Do Nothing", -1);
+		ret.addObject("-1: Do Nothing", -1);
 		for (String i : new File(Constants.AUTON_DATA_RIO_DIRECTORY).list()) {
 			ret.addObject(i.substring(i.lastIndexOf("/") + 1, i.lastIndexOf(".")),
 					Integer.parseInt(i.substring(i.lastIndexOf("/") + 1, i.lastIndexOf("-"))));

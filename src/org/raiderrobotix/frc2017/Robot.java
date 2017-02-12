@@ -41,7 +41,7 @@ public final class Robot extends IterativeRobot {
 		SmartDashboard.putNumber("Left Encoder", m_drives.getLeftEncoderDistance());
 		SmartDashboard.putNumber("Right Encoder", m_drives.getRightEncoderDistance());
 		SmartDashboard.putNumber("Gyro Heading", m_drives.getGyroAngle());
-		SmartDashboard.putNumber("Auton Chosen", SmartDashboard.getNumber("Choose Auton", -1));
+		SmartDashboard.putNumber("Auton Chosen", m_autonChosen);
 		SmartDashboard.putBoolean("Gear Collector Out?", m_gearCollector.isOut());
 		SmartDashboard.putBoolean("Brakes In?", m_drives.brakesAreOn());
 		SmartDashboard.putNumber("Battery Voltage", m_pdp.getVoltage());
