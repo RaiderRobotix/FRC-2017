@@ -24,6 +24,7 @@ public final class AutonomousMode extends ArrayList<Instruction> {
 		m_fuelHandler = FuelHandler.getInstance();
 		String filePath = "";
 		checkLoop: for (File i : dir.listFiles()) {
+			// Look for correct autonomous mode.
 			if (i.isFile()) {
 				String path = i.getAbsolutePath();
 				try {
@@ -44,10 +45,19 @@ public final class AutonomousMode extends ArrayList<Instruction> {
 		in.close();
 	}
 
+	/**
+	 * Take control of robot with .dat file.
+	 * 
+	 * @param time
+	 *            The seconds passed on the current step on the robots timer.
+	 *            This is turned to zero when the new step should start.
+	 * @return The time passed into it. Returns 0.0 when complete.
+	 */
 	public double auton(double time) {
 		try {
 			Instruction i = this.get(0);
 			switch (Integer.parseInt(i.getNext())) {
+			// Determine Mechanism requires and use it.
 			case Mechanism.INTAKE:
 				switch (Integer.parseInt(i.getNext())) {
 				case Mechanism.Intake.INTAKE_IN:

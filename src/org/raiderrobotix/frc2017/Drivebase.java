@@ -173,9 +173,9 @@ public final class Drivebase {
 
 	public void setToSlowSpeed(boolean forward) {
 		if (forward) {
-			setSpeed(Constants.SLOW_SPEED_LARGE, Constants.SLOW_SPEED_WEAK);
+			setSpeed(Constants.SLOW_SPEED_STRONG, Constants.SLOW_SPEED_WEAK);
 		} else {
-			setSpeed(-Constants.SLOW_SPEED_WEAK, -Constants.SLOW_SPEED_LARGE);
+			setSpeed(-Constants.SLOW_SPEED_WEAK, -Constants.SLOW_SPEED_STRONG);
 		}
 	}
 

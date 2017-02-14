@@ -62,6 +62,12 @@ public final class AutonController {
 		return n;
 	}
 
+	/**
+	 * Show the user a list of autonomous modes on the robot.
+	 * 
+	 * @return A SendableChooser of autonomous modes to send to the
+	 *         SmartDashboard.
+	 */
 	public SendableChooser<Integer> getSendableChooser() {
 		SendableChooser<Integer> ret = new SendableChooser<Integer>();
 		ret.addObject("-1: Do Nothing", -1);
@@ -83,7 +89,8 @@ public final class AutonController {
 				System.out.println("FTP Auton Reading Exception");
 			}
 		} else {
-			if (m_auton.auton(m_timer.get()) == 0.0) {
+			if (m_auton.auton(m_timer.get() + 0.001) == 0.0) {
+				// Add tiny amount to ensure robot wont skip a step.
 				m_timer.reset();
 			}
 		}

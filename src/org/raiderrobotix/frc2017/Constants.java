@@ -24,10 +24,10 @@ public abstract class Constants {
 	public static final double DRIVE_STRAIGHT_DISTANCE_TOLERANCE = 1.0; // TODO:
 																		// get
 	public static final double SLOW_SPEED_WEAK = 0.12;
-	public static final double SLOW_SPEED_LARGE = 0.18;
+	public static final double SLOW_SPEED_STRONG = 0.18;
 	public static final double DRIVE_STRAIGHT_SLOW_RANGE = 18.0;
 
-	// PWMs (Control) TODO: get
+	// PWMs (Control)
 	public static final int LEFT_DRIVES_PWM = 3;
 	public static final int RIGHT_DRIVES_PWM = 4;
 	public static final int LEFT_BRAKE_PWM = 0;
