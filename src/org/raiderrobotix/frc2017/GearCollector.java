@@ -1,5 +1,6 @@
 package org.raiderrobotix.frc2017;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Solenoid;
 
 public final class GearCollector {
@@ -7,10 +8,12 @@ public final class GearCollector {
 	private static GearCollector m_instance;
 
 	private final Solenoid m_cylinders;
+	private final DigitalInput m_lineBreaker;
 	private boolean m_isOut;
 
 	private GearCollector() {
 		m_cylinders = new Solenoid(Constants.PCM_CAN_ADDRESS, Constants.GEAR_CYLINDERS_SOLENOID_CHANNEL);
+		m_lineBreaker = new DigitalInput(Constants.LINE_BREAKER_PWM);
 		m_isOut = false;
 	}
 
@@ -35,4 +38,8 @@ public final class GearCollector {
 		m_cylinders.set(false);
 	}
 
+	public boolean lineBroken() {
+		return !m_lineBreaker.get();
+	}
+	
 }

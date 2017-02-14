@@ -44,6 +44,7 @@ public abstract class Constants {
 	public static final int LEFT_ENCODER_PWM_B = 1;
 	public static final int RIGHT_ENCODER_PWM_A = 3;
 	public static final int RIGHT_ENCODER_PWM_B = 4;
+	public static final int LINE_BREAKER_PWM = 6;
 
 	// Auton Information
 	private static final double TIRE_DIAMETER = 8.938; // (In Inches)
@@ -60,7 +61,6 @@ public abstract class Constants {
 	public static final int OPERATOR_JOYSTICK_PORT = 2;
 	public static final int SWITCH_BOX_PORT = 3;
 	public static final double JOYSTICK_DEADBAND = 0.2;
-	public static final int OPERATOR_OVERRIDE_BTN = 7;
 
 	// CAN Addresses
 	public static final int INTAKE_CAN_ADDRESS = 14;
@@ -78,7 +78,8 @@ public abstract class Constants {
 	public static final boolean SHOOTER_MOTOR_INVERTED = false;
 	public static final boolean CLIMB_MOTOR_INVERTED = false;
 
-	// Pneumatic Constants
+	// Assorted Constants
 	public static final int GEAR_CYLINDERS_SOLENOID_CHANNEL = 4;
+	public static final double LINE_BREAKER_CLOSE_WAIT_TIME = 1.5;
 
 }

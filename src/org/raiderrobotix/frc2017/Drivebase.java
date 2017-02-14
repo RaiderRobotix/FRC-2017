@@ -18,7 +18,7 @@ public final class Drivebase {
 	private final Encoder m_leftEncoder;
 	private final Encoder m_rightEncoder;
 	private final AHRS m_navX;
-	
+
 	private boolean m_brakesOn;
 	private boolean m_drivingStep;
 	private double m_headingYaw;

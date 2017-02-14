@@ -1,6 +1,7 @@
 package org.raiderrobotix.frc2017;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Timer;
 
 public final class OI {
 
@@ -17,11 +18,19 @@ public final class OI {
 	private final Joystick m_rightStick;
 	private final Joystick m_operatorStick;
 
+	// ===== Line Breaker Constants =====
+	private final Timer m_teleopTimer;
+	private double m_lastCloseTime = -Constants.LINE_BREAKER_CLOSE_WAIT_TIME;
+
 	public OI() {
 		m_drives = Drivebase.getInstance();
 		m_gearCollector = GearCollector.getInstance();
 		m_climber = Climber.getInstance();
 		m_fuelHandler = FuelHandler.getInstance();
+
+		m_teleopTimer = new Timer();
+		m_teleopTimer.start();
+		m_teleopTimer.reset();
 
 		m_leftStick = new Joystick(Constants.LEFT_JOYSTICK_PORT);
 		m_rightStick = new Joystick(Constants.RIGHT_JOYSTICK_PORT);
@@ -60,34 +69,33 @@ public final class OI {
 			m_gearCollector.openCollector();
 		} else if (getOperatorButton(3)) {
 			m_gearCollector.closeCollector();
+		} else if (m_gearCollector.lineBroken()) {
+			m_gearCollector.closeCollector();
+			m_lastCloseTime = m_teleopTimer.get();
+		} else if (m_teleopTimer.get() > m_lastCloseTime + Constants.LINE_BREAKER_CLOSE_WAIT_TIME) {
+			m_gearCollector.openCollector();
 		}
 
 		// =========== CLIMBER ===========
 		if (getOperatorButton(11)) {
-			m_climber.startMotor(getOperatorButton(Constants.OPERATOR_OVERRIDE_BTN));
+			m_climber.startMotor(getOperatorButton(12));
 		} else {
 			m_climber.stopMotor();
 		}
 
 		// =========== FUEL HANDLER ===========
-		if (getOperatorButton(Constants.OPERATOR_OVERRIDE_BTN)) {
-			if(getOperatorButton(8)) {
-				m_fuelHandler.intakeFuel(true);
-			} else if (getOperatorButton(9)) {
-				m_fuelHandler.stopIntake();
-			} else {
-				m_fuelHandler.intakeFuel();
-			}
+		if (getOperatorButton(8)) {
+			m_fuelHandler.intakeFuel(true);
+		} else if (getOperatorButton(7)) {
+			m_fuelHandler.stopIntake();
 		} else {
 			m_fuelHandler.intakeFuel();
 		}
 
 		if (getOperatorButton(4)) {
-			m_fuelHandler.setShooterSpeed(
-					Constants.SHOOTER_HIGH_SPEED * (getOperatorButton(Constants.OPERATOR_OVERRIDE_BTN) ? -1.0 : 1.0));
+			m_fuelHandler.setShooterSpeed(Constants.SHOOTER_HIGH_SPEED);
 		} else if (getOperatorButton(6)) {
-			m_fuelHandler.setShooterSpeed(
-					Constants.SHOOTER_LOW_SPEED * (getOperatorButton(Constants.OPERATOR_OVERRIDE_BTN) ? -1.0 : 1.0));
+			m_fuelHandler.setShooterSpeed(-Constants.SHOOTER_LOW_SPEED);
 		} else {
 			m_fuelHandler.setShooterSpeed(0.0);
 		}
