@@ -14,7 +14,7 @@ public abstract class Constants {
 	public static final double FUEL_INTAKE_SPEED = 1.0;
 	public static final double CLIMB_SPEED = 1.0;
 	public static final double SHOOTER_HIGH_SPEED = 1.0; // TODO: get
-	public static final double SHOOTER_LOW_SPEED = 0.5; // TODO: get
+	public static final double SHOOTER_LOW_SPEED = 0.6; // TODO: get
 
 	// Auto-Driving Constants
 	public static final double TURN_ANGLE_TOLERANCE = 1.0; // (In Degrees)
@@ -25,7 +25,7 @@ public abstract class Constants {
 																		// get
 	public static final double SLOW_SPEED_WEAK = 0.12;
 	public static final double SLOW_SPEED_STRONG = 0.18;
-	public static final double DRIVE_STRAIGHT_SLOW_RANGE = 18.0;
+	public static final double DRIVE_STRAIGHT_SLOW_RANGE = 24.0;
 
 	// PWMs (Control)
 	public static final int LEFT_DRIVES_PWM = 3;
@@ -70,16 +70,18 @@ public abstract class Constants {
 	public static final int PDP_CAN_ADDRESS = 15;
 
 	// Inversions
-	public static final boolean RIGHT_DRIVE_MOTORS_INVERTED = true;
-	public static final boolean LEFT_DRIVE_MOTORS_INVERTED = false;
-	public static final boolean LEFT_ENCODER_INVERTED = false;
+	public static final boolean RIGHT_DRIVE_MOTORS_INVERTED = false;
+	public static final boolean LEFT_DRIVE_MOTORS_INVERTED = true;
+	public static final boolean LEFT_ENCODER_INVERTED = true;
 	public static final boolean RIGHT_ENCODER_INVERTED = false;
 	public static final boolean INTAKE_MOTOR_INVERTED = true;
 	public static final boolean SHOOTER_MOTOR_INVERTED = false;
-	public static final boolean CLIMB_MOTOR_INVERTED = false;
+	public static final boolean CLIMB_MOTOR_INVERTED = true;
 
 	// Assorted Constants
 	public static final int GEAR_CYLINDERS_SOLENOID_CHANNEL = 4;
 	public static final double LINE_BREAKER_CLOSE_WAIT_TIME = 1.5;
+	public static final int ULTRASONIC_PWM = 0;
+	public static final double ULTRASONIC_CONSTANT = 1.0;
 
 }

@@ -1,15 +1,15 @@
 package org.raiderrobotix.frc2017;
 
-import edu.wpi.first.wpilibj.TalonSRX;
+import com.ctre.CANTalon;
 
 public final class Climber {
 
 	private static Climber m_instance;
 
-	private final TalonSRX m_climbMotor;
+	private final CANTalon m_climbMotor;
 
 	private Climber() {
-		m_climbMotor = new TalonSRX(Constants.CLIMBER_CAN_ADDRESS);
+		m_climbMotor = new CANTalon(Constants.CLIMBER_CAN_ADDRESS);
 	}
 
 	public static Climber getInstance() {

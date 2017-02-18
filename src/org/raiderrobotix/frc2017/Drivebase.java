@@ -2,6 +2,7 @@ package org.raiderrobotix.frc2017;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.wpilibj.Servo;
@@ -18,6 +19,7 @@ public final class Drivebase {
 	private final Encoder m_leftEncoder;
 	private final Encoder m_rightEncoder;
 	private final AHRS m_navX;
+	private final AnalogInput m_sonic;
 
 	private boolean m_brakesOn;
 	private boolean m_drivingStep;
@@ -42,6 +44,8 @@ public final class Drivebase {
 		m_rightEncoder.setDistancePerPulse(Constants.INCHES_PER_COUNT);
 
 		m_drivingStep = false;
+
+		m_sonic = new AnalogInput(Constants.ULTRASONIC_PWM);
 	}
 
 	public static Drivebase getInstance() {
@@ -77,6 +81,7 @@ public final class Drivebase {
 	}
 
 	public double getLeftEncoderDistance() {
+		System.out.printf("Inverted %b\n", Constants.LEFT_ENCODER_INVERTED);
 		return m_leftEncoder.getDistance() * (Constants.LEFT_ENCODER_INVERTED ? -1.0 : 1.0);
 	}
 
@@ -85,7 +90,8 @@ public final class Drivebase {
 	}
 
 	public double getAverageEncoderDistance() {
-		return (getLeftEncoderDistance() + getRightEncoderDistance()) / 2.0;
+		//return (getLeftEncoderDistance() + getRightEncoderDistance()) / 2.0;
+		return getRightEncoderDistance();
 	}
 
 	public void resetEncoders() {
@@ -129,6 +135,7 @@ public final class Drivebase {
 	 * @return True, when complete.
 	 */
 	public boolean driveStraight(double distance, double speed) {
+		System.out.printf("Encoder Distance: %f\n", getAverageEncoderDistance());
 		if (!m_drivingStep) {
 			brakesOff();
 			resetNavX();
@@ -138,7 +145,7 @@ public final class Drivebase {
 			speed = Math.abs(speed) * (distance / Math.abs(distance));
 			double leftSpeed = speed;
 			double rightSpeed = speed;
-			if (getAverageEncoderDistance() + Constants.DRIVE_STRAIGHT_SLOW_RANGE >= distance) {
+			if (getAverageEncoderDistance() >= distance - Constants.DRIVE_STRAIGHT_SLOW_RANGE) {
 				// If within slow range, set to slow speed
 				setToSlowSpeed(speed > 0.0);
 			} else {
@@ -185,5 +192,9 @@ public final class Drivebase {
 
 	public void resetNavX() {
 		m_headingYaw = m_navX.getAngle();
+	}
+
+	public double getSonicDistance() {
+		return m_sonic.getValue() * Constants.ULTRASONIC_CONSTANT;
 	}
 }

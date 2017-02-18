@@ -77,7 +77,7 @@ public final class OI {
 		}
 
 		// =========== CLIMBER ===========
-		if (getOperatorButton(11)) {
+		if (getOperatorButton(10)) {
 			m_climber.startMotor(getOperatorButton(12));
 		} else {
 			m_climber.stopMotor();
@@ -88,13 +88,17 @@ public final class OI {
 			m_fuelHandler.intakeFuel(true);
 		} else if (getOperatorButton(7)) {
 			m_fuelHandler.stopIntake();
-		} else {
+		} else if (getRightY() > 0.0 || getLeftY() > 0.0 || getRightButton(2)) {
 			m_fuelHandler.intakeFuel();
+		} else {
+			m_fuelHandler.stopIntake();
 		}
 
-		if (getOperatorButton(4)) {
+		if (getOperatorButton(6)) {
 			m_fuelHandler.setShooterSpeed(Constants.SHOOTER_HIGH_SPEED);
-		} else if (getOperatorButton(6)) {
+		} else if (getOperatorButton(4)) {
+			m_fuelHandler.setShooterSpeed(Constants.SHOOTER_LOW_SPEED);
+		} else if (getOperatorButton(5)) {
 			m_fuelHandler.setShooterSpeed(-Constants.SHOOTER_LOW_SPEED);
 		} else {
 			m_fuelHandler.setShooterSpeed(0.0);
@@ -102,7 +106,7 @@ public final class OI {
 	}
 
 	public double getLeftY() {
-		double yval = m_leftStick.getY();
+		double yval = -m_leftStick.getY();
 		if (Math.abs(yval) < Constants.JOYSTICK_DEADBAND) {
 			yval = 0.0;
 		}
@@ -110,7 +114,7 @@ public final class OI {
 	}
 
 	public double getRightY() {
-		double yval = m_rightStick.getY();
+		double yval = -m_rightStick.getY();
 		if (Math.abs(yval) < Constants.JOYSTICK_DEADBAND) {
 			yval = 0.0;
 		}

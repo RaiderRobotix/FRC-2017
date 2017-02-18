@@ -103,7 +103,7 @@ public final class AutonController {
 			m_drives.brakesOff();
 			m_step++;
 		} else if (m_step == 1) {
-			if (m_drives.driveStraight(12.0, 0.4)) {
+			if (m_drives.driveStraight(84.0, 0.7)) {
 				m_drives.setSpeed(0.0);
 				m_step++;
 			}

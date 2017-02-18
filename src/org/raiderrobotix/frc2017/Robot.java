@@ -61,11 +61,13 @@ public final class Robot extends IterativeRobot {
 	}
 
 	public void autonomousPeriodic() {
+		m_autonController.test();
+		/*
 		if (m_autonChosen == 1) {
 			m_autonController.test();
 		} else if (m_autonChosen > 1) {
 			m_autonController.useFTPFile(m_autonChosen);
-		}
+		}*/
 		update();
 	}
 
