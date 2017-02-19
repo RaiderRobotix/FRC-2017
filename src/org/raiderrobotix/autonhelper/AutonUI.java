@@ -38,6 +38,7 @@ public final class AutonUI extends JFrame {
 	private JButton m_ftpButton = new JButton("Send Code to Robot");
 	private JButton m_copyButton = new JButton("Copy Code to Clipboard");
 	private JButton m_openButton = new JButton("Open Auton");
+	private StringBuilder m_lastMethodTitle = null;
 
 	private AutonUI() {
 		super("Auton Helper");
@@ -59,10 +60,13 @@ public final class AutonUI extends JFrame {
 						m_is.remove(0);
 					}
 					int c = 0;
+					String autonFilePath = Utility.getFile(Constants.AUTON_DATA_LOCAL_DIRECTORY).getAbsolutePath();
 					for (Instruction i : (ArrayList<Instruction>) new ObjectInputStream(
-							new FileInputStream(Utility.getFile(Constants.AUTON_DATA_LOCAL_DIRECTORY))).readObject()) {
+							new FileInputStream(new File(autonFilePath))).readObject()) {
 						m_is.add(new InstructionPanel(++c, i));
 					}
+					m_lastMethodTitle = new StringBuilder(
+							autonFilePath.substring(autonFilePath.indexOf("/") + 1, autonFilePath.lastIndexOf(".")));
 					updateUI(false);
 				} catch (ClassNotFoundException | IOException e1) {
 					e1.printStackTrace();
@@ -70,7 +74,6 @@ public final class AutonUI extends JFrame {
 			}
 		});
 		m_helpButton.addActionListener(new ActionListener() {
-
 			public void actionPerformed(ActionEvent e) {
 				JOptionPane.showMessageDialog(null,
 						new JLabel(
@@ -89,12 +92,13 @@ public final class AutonUI extends JFrame {
 					instructions.add(i.getInstruction());
 				}
 				try {
-					String name = Utility.getAutonName();
+					String name = Utility.getAutonName(m_lastMethodTitle);
 					name += ".dat";
 					Utility.sendOverFile(instructions, name);
 					new ObjectOutputStream(new FileOutputStream(
 							new File(Constants.AUTON_DATA_LOCAL_DIRECTORY.getAbsolutePath(), name).getAbsolutePath()))
 									.writeObject(instructions);
+					m_lastMethodTitle = new StringBuilder(name);
 				} catch (IOException e1) {
 					JOptionPane.showMessageDialog(null,
 							new JLabel("<html>There was an error<br>sending the file.</html>", SwingConstants.CENTER),

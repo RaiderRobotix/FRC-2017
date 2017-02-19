@@ -78,23 +78,27 @@ public abstract class Utility {
 		return a;
 	}
 
-	public static String getAutonName() {
-		ArrayList<Integer> numbersUsed = new ArrayList<Integer>();
-		String[] localFilePaths = Constants.AUTON_DATA_LOCAL_DIRECTORY.list();
-		for (String filePath : localFilePaths) {
-			try {
-				numbersUsed.add(Integer.parseInt(filePath.substring(0, filePath.indexOf("_"))));
-			} catch (NumberFormatException e) {
-				// This is an extra file
-				System.out.printf("getAutonName NFE: %s\n", filePath);
+	public static String getAutonName(StringBuilder lastAutonName) {
+		String lastName = lastAutonName.toString();
+		lastName = lastName.substring(lastName.lastIndexOf("/") + 1, lastName.lastIndexOf("."));
+		if (lastName != null) {
+			int answer = -1;
+			do {
+				JOptionPane.showOptionDialog(null,
+						new JLabel("<html>Would you like to use<br>the last value: " + lastName.toString()
+								+ "?</html>", SwingConstants.CENTER),
+						"Selection", JOptionPane.PLAIN_MESSAGE, JOptionPane.YES_NO_OPTION, null, null, -1);
+			} while (answer < 0);
+			if (answer == 0) {
+				return lastName.toString();
 			}
 		}
 		int autonNumber = 0;
 		boolean ran = false;
-		while (autonNumber < 1 || autonNumber > 21 || numbersUsed.contains(autonNumber)) {
+		while (autonNumber < 1 || autonNumber > 21) {
 			try {
 				if (ran) {
-					JOptionPane.showMessageDialog(null,
+					JOptionPane.showInputDialog(null,
 							new JLabel("<html>Please use a number that<br>isn't being used and is<br>"
 									+ "between 1 and 21.</html>", SwingConstants.CENTER));
 				}
@@ -150,10 +154,6 @@ public abstract class Utility {
 		out.close();
 		JOptionPane.showMessageDialog(null, new JLabel("<html>Transfer Successful!</html>", SwingConstants.CENTER),
 				"Message", JOptionPane.PLAIN_MESSAGE);
-	}
-
-	public static void main(String[] args) {
-		System.out.println(getAutonName());
 	}
 
 }

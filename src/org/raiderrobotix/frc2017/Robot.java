@@ -52,6 +52,7 @@ public final class Robot extends IterativeRobot {
 		SmartDashboard.putBoolean("Brakes In?", m_drives.brakesAreOn());
 		SmartDashboard.putNumber("Battery Voltage", m_pdp.getVoltage());
 		SmartDashboard.putNumber("Battery Current", m_pdp.getTotalCurrent());
+		SmartDashboard.putNumber("Climber Current", m_pdp.getCurrent(13));
 
 		if (this.isDisabled() || this.isAutonomous()) {
 			m_autonChosen = m_autonController.getAutonChosen();

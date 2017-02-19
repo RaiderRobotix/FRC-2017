@@ -64,7 +64,10 @@ public final class OI {
 		}
 
 		// =========== GEAR COLLECTOR ===========
-		if (getOperatorTrigger()) {
+		if (getOperatorButton(10) || getOperatorButton(12)) {
+			// If climbing, stop gear collector.
+			m_gearCollector.closeCollector();
+		} else if (getOperatorTrigger()) {
 			m_gearCollector.openCollector();
 		} else if (getOperatorButton(3)) {
 			m_gearCollector.closeCollector();
@@ -85,7 +88,10 @@ public final class OI {
 		}
 
 		// =========== FUEL HANDLER ===========
-		if (getOperatorButton(8)) {
+		if ((getOperatorButton(10) || getOperatorButton(12)) && (!getRightButton(2))) {
+			// If climbing, stop intake.
+			m_fuelHandler.stopIntake();
+		} else if (getOperatorButton(8)) {
 			m_fuelHandler.intakeFuel(true);
 		} else if (getOperatorButton(7)) {
 			m_fuelHandler.stopIntake();
