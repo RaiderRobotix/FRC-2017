@@ -47,8 +47,7 @@ public final class OI {
 	public void enableTeleopControls() {
 		// =========== RESETS ===========
 		if (getRightButton(8)) {
-			m_drives.resetEncoders();
-			m_drives.resetNavX();
+			m_drives.resetSensors();
 		}
 
 		// =========== DRIVES ===========
@@ -78,7 +77,9 @@ public final class OI {
 
 		// =========== CLIMBER ===========
 		if (getOperatorButton(10)) {
-			m_climber.startMotor(getOperatorButton(12));
+			m_climber.startMotor(false);
+		} else if (getOperatorButton(12)) {
+			m_climber.startMotor(true);
 		} else {
 			m_climber.stopMotor();
 		}

@@ -91,10 +91,7 @@ public final class InstructionSet extends ArrayList<InstructionPanel> {
 				break;
 			case Mechanism.DRIVES:
 				ret += "m_drives.brakesOff();\n";
-				ret += "m_drives.resetNavX();\n";
-				if (Integer.parseInt(i.getInstruction().get(1)) == Mechanism.Drives.STRAIGHT) {
-					ret += "m_drives.resetEncoders();\n";
-				}
+				ret += "m_drives.resetSensors();\n";
 				break;
 			case Mechanism.BRAKES:
 				ret += "m_drives.setSpeed(0.0);\n";

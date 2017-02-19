@@ -19,6 +19,13 @@ public final class Robot extends IterativeRobot {
 	private int m_autonChosen;
 
 	public void robotInit() {
+
+		// Code to delete ALL autonomous modes stored on the RoboRio
+		// for(File i : new
+		// File(Constants.AUTON_DATA_RIO_DIRECTORY).listFiles()) {
+		// i.delete();
+		// }
+
 		// ===== ROBOT MECHANISMS =====
 		m_autonController = AutonController.getInstance();
 		m_OI = OI.getInstance();
@@ -28,8 +35,7 @@ public final class Robot extends IterativeRobot {
 		m_pdp = new PowerDistributionPanel(Constants.PDP_CAN_ADDRESS);
 
 		// ===== RESETS =====
-		m_drives.resetNavX();
-		m_drives.resetEncoders();
+		m_drives.resetSensors();
 		m_compressor.setClosedLoopControl(true);
 
 		// ===== AUTON STUFF =====
@@ -56,18 +62,14 @@ public final class Robot extends IterativeRobot {
 	public void autonomousInit() {
 		m_drives.brakesOff();
 		m_autonController.resetStep();
-		m_drives.resetNavX();
+		m_drives.resetSensors();
 		m_gearCollector.closeCollector();
 	}
 
 	public void autonomousPeriodic() {
-		m_autonController.test();
-		/*
-		if (m_autonChosen == 1) {
-			m_autonController.test();
-		} else if (m_autonChosen > 1) {
+		if (m_autonChosen != 0) {
 			m_autonController.useFTPFile(m_autonChosen);
-		}*/
+		}
 		update();
 	}
 

@@ -70,10 +70,11 @@ public final class AutonController {
 	 */
 	public SendableChooser<Integer> getSendableChooser() {
 		SendableChooser<Integer> ret = new SendableChooser<Integer>();
-		ret.addObject("-1: Do Nothing", -1);
-		for (String i : new File(Constants.AUTON_DATA_RIO_DIRECTORY).list()) {
-			ret.addObject(i.substring(i.lastIndexOf("/") + 1, i.lastIndexOf(".")),
-					Integer.parseInt(i.substring(i.lastIndexOf("/") + 1, i.lastIndexOf("-"))));
+		ret.addObject("0: Do Nothing", -1);
+		String[] autonFiles = new File(Constants.AUTON_DATA_RIO_DIRECTORY).list();
+		for (String file : autonFiles) {
+			ret.addObject(file.substring(0, file.lastIndexOf(".")),
+					Integer.parseInt(file.substring(0, file.lastIndexOf("_"))));
 		}
 		return ret;
 	}
@@ -81,29 +82,31 @@ public final class AutonController {
 	public void useFTPFile(int autonNumber) {
 		if (m_step == 0) {
 			try {
-				m_auton = new AutonomousMode(autonNumber, Constants.AUTON_DATA_LOCAL_DIRECTORY);
+				m_auton = new AutonomousMode(autonNumber, new File(Constants.AUTON_DATA_RIO_DIRECTORY));
 				m_timer.start();
 				m_timer.reset();
+				m_drives.resetSensors();
 				m_step++;
 			} catch (Exception e) {
+				e.printStackTrace();
 				System.out.println("FTP Auton Reading Exception");
 			}
 		} else {
 			if (m_auton.auton(m_timer.get() + 0.001) == 0.0) {
 				// Add tiny amount to ensure robot wont skip a step.
 				m_timer.reset();
+				m_drives.resetSensors();
 			}
 		}
 	}
 
 	public void test() {
 		if (m_step == 0) {
-			m_drives.resetEncoders();
-			m_drives.resetNavX();
+			m_drives.resetSensors();
 			m_drives.brakesOff();
 			m_step++;
 		} else if (m_step == 1) {
-			if (m_drives.driveStraight(84.0, 0.7)) {
+			if (m_drives.turnToAngle(90.0, 0.5)) {
 				m_drives.setSpeed(0.0);
 				m_step++;
 			}

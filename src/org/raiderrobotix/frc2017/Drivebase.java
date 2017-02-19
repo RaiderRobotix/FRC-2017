@@ -81,7 +81,6 @@ public final class Drivebase {
 	}
 
 	public double getLeftEncoderDistance() {
-		System.out.printf("Inverted %b\n", Constants.LEFT_ENCODER_INVERTED);
 		return m_leftEncoder.getDistance() * (Constants.LEFT_ENCODER_INVERTED ? -1.0 : 1.0);
 	}
 
@@ -90,14 +89,14 @@ public final class Drivebase {
 	}
 
 	public double getAverageEncoderDistance() {
-		//return (getLeftEncoderDistance() + getRightEncoderDistance()) / 2.0;
+		// return (getLeftEncoderDistance() + getRightEncoderDistance()) / 2.0;
 		return getRightEncoderDistance();
 	}
 
-	public void resetEncoders() {
-		m_leftEncoder.reset();
-		m_rightEncoder.reset();
-	}
+	/*
+	 * public void resetEncoders() { m_leftEncoder.reset();
+	 * m_rightEncoder.reset(); }
+	 */
 
 	/**
 	 * Have the robot turn to a specific angle at a specified speed.
@@ -111,7 +110,7 @@ public final class Drivebase {
 	public boolean turnToAngle(double angle, double speed) {
 		if (!m_drivingStep) {
 			brakesOff();
-			resetNavX();
+			resetSensors();
 			m_drivingStep = true;
 		} else {
 			speed = Math.abs(speed) * (angle / Math.abs(angle));
@@ -135,11 +134,9 @@ public final class Drivebase {
 	 * @return True, when complete.
 	 */
 	public boolean driveStraight(double distance, double speed) {
-		System.out.printf("Encoder Distance: %f\n", getAverageEncoderDistance());
 		if (!m_drivingStep) {
 			brakesOff();
-			resetNavX();
-			resetEncoders();
+			resetSensors();
 			m_drivingStep = true;
 		} else {
 			speed = Math.abs(speed) * (distance / Math.abs(distance));
@@ -148,6 +145,8 @@ public final class Drivebase {
 			if (getAverageEncoderDistance() >= distance - Constants.DRIVE_STRAIGHT_SLOW_RANGE) {
 				// If within slow range, set to slow speed
 				setToSlowSpeed(speed > 0.0);
+			} else if (getAverageEncoderDistance() > distance + Constants.DRIVE_STRAIGHT_DISTANCE_TOLERANCE) {
+				setToSlowSpeed(speed < 0.0);
 			} else {
 				if (Math.abs(getGyroAngle()) > Constants.DRIVE_STRAIGHT_ANGLE_TOLERANCE) {
 					// Adjust speeds for incorrect angles
@@ -190,11 +189,18 @@ public final class Drivebase {
 		return m_navX.getAngle() - m_headingYaw;
 	}
 
-	public void resetNavX() {
-		m_headingYaw = m_navX.getAngle();
-	}
+	/*
+	 * public void resetNavX() { m_headingYaw = m_navX.getAngle(); }
+	 */
 
 	public double getSonicDistance() {
 		return m_sonic.getValue() * Constants.ULTRASONIC_CONSTANT;
+	}
+
+	public void resetSensors() {
+		m_headingYaw = m_navX.getAngle();
+		m_leftEncoder.reset();
+		m_rightEncoder.reset();
+
 	}
 }

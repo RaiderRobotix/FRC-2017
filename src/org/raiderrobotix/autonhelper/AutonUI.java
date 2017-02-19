@@ -29,6 +29,7 @@ public final class AutonUI extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private static AutonUI m_instance;
+	private static final boolean CONSTANTS_BEING_USED = false;
 
 	private Container m_pane;
 	private InstructionSet m_is;
@@ -88,7 +89,7 @@ public final class AutonUI extends JFrame {
 					instructions.add(i.getInstruction());
 				}
 				try {
-					String name = Utility.getName();
+					String name = Utility.getAutonName();
 					name += ".dat";
 					Utility.sendOverFile(instructions, name);
 					new ObjectOutputStream(new FileOutputStream(
@@ -142,11 +143,13 @@ public final class AutonUI extends JFrame {
 		if (init) {
 			m_pane.removeAll();
 			JPanel northernButtonPanel = new JPanel();
-			northernButtonPanel.setLayout(new GridLayout(1, 5, 10, 10));
+			northernButtonPanel.setLayout(new GridLayout(1, 4 + (CONSTANTS_BEING_USED ? 1 : 0), 10, 10));
 			northernButtonPanel.add(m_addButton);
 			northernButtonPanel.add(m_ftpButton);
 			northernButtonPanel.add(m_copyButton);
-			northernButtonPanel.add(m_helpButton);
+			if (CONSTANTS_BEING_USED) {
+				northernButtonPanel.add(m_helpButton);
+			}
 			northernButtonPanel.add(m_openButton);
 			m_pane.add(northernButtonPanel, BorderLayout.NORTH);
 		} else {
@@ -161,7 +164,7 @@ public final class AutonUI extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		 AutonUI.getInstance();
+		AutonUI.getInstance();
 	}
 
 }

@@ -292,7 +292,6 @@ public final class InstructionPanel extends JPanel {
 			ret.add(m_speedField.getText());
 			break;
 		}
-		ret.add("$");
 		return ret;
 	}
 

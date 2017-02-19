@@ -34,9 +34,9 @@ public abstract class Constants {
 	public static final int RIGHT_BRAKE_PWM = 1;
 
 	// Brake Positions
-	public static final double LEFT_BRAKES_ON = 0.61;
+	public static final double LEFT_BRAKES_ON = 0.63;
 	public static final double LEFT_BRAKES_OFF = 0.41;
-	public static final double RIGHT_BRAKES_ON = 0.16;
+	public static final double RIGHT_BRAKES_ON = 0.18;
 	public static final double RIGHT_BRAKES_OFF = 0.46;
 
 	// Digital Sensors
@@ -47,8 +47,7 @@ public abstract class Constants {
 	public static final int LINE_BREAKER_PWM = 6;
 
 	// Auton Information
-	private static final double TIRE_DIAMETER = 8.938; // (In Inches)
-	private static final double TIRE_CIRCUMFERENCE = TIRE_DIAMETER * Math.PI;
+	private static final double TIRE_CIRCUMFERENCE = 29.898; // (In Inches)
 	private static final double COUNTS_PER_REVOLUTION = 128;
 	private static final double GEAR_RATIO = 0.068182; // (Driver: Encoder Gear,
 														// Driven: Wheel Gear)

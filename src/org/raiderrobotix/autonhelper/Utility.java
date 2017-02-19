@@ -78,6 +78,38 @@ public abstract class Utility {
 		return a;
 	}
 
+	public static String getAutonName() {
+		ArrayList<Integer> numbersUsed = new ArrayList<Integer>();
+		String[] localFilePaths = Constants.AUTON_DATA_LOCAL_DIRECTORY.list();
+		for (String filePath : localFilePaths) {
+			try {
+				numbersUsed.add(Integer.parseInt(filePath.substring(0, filePath.indexOf("_"))));
+			} catch (NumberFormatException e) {
+				// This is an extra file
+				System.out.printf("getAutonName NFE: %s\n", filePath);
+			}
+		}
+		int autonNumber = 0;
+		boolean ran = false;
+		while (autonNumber < 1 || autonNumber > 21 || numbersUsed.contains(autonNumber)) {
+			try {
+				if (ran) {
+					JOptionPane.showMessageDialog(null,
+							new JLabel("<html>Please use a number that<br>isn't being used and is<br>"
+									+ "between 1 and 21.</html>", SwingConstants.CENTER));
+				}
+				autonNumber = Integer.parseInt(JOptionPane.showInputDialog(null,
+						new JLabel("<html>Enter a number</html>", SwingConstants.CENTER), "Number Entry",
+						JOptionPane.PLAIN_MESSAGE));
+				ran = true;
+			} catch (NumberFormatException e) {
+				autonNumber = 0;
+				ran = true;
+			}
+		}
+		return String.format("%d_%s", autonNumber, getName());
+	}
+
 	/**
 	 * Get a speed value from the user.
 	 * 
@@ -118,6 +150,10 @@ public abstract class Utility {
 		out.close();
 		JOptionPane.showMessageDialog(null, new JLabel("<html>Transfer Successful!</html>", SwingConstants.CENTER),
 				"Message", JOptionPane.PLAIN_MESSAGE);
+	}
+
+	public static void main(String[] args) {
+		System.out.println(getAutonName());
 	}
 
 }
