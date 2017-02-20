@@ -23,8 +23,12 @@ public final class Climber {
 		m_climbMotor.set(speed * (Constants.CLIMB_MOTOR_INVERTED ? -1.0 : 1.0));
 	}
 
-	public void startMotor(boolean override) {
-		setSpeed(Constants.CLIMB_SPEED * (override ? -1.0 : 1.0));
+	public void runForward() {
+		setSpeed(Constants.CLIMB_SPEED);
+	}
+
+	public void runBackwards() {
+		setSpeed(Constants.CLIMB_SPEED);
 	}
 
 	public void stopMotor() {

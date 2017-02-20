@@ -40,26 +40,11 @@ public final class AutonController {
 	}
 
 	public int getAutonChosen() {
-		int n = 0;
-		if (m_switchBox.getRawButton(5)) {
-			n += 1;
+		int ret = 0;
+		for (int i = 1; i <= 6; i++) {
+			ret += (getSwitch(i) ? i : 0);
 		}
-		if (m_switchBox.getRawButton(12)) {
-			n += 2;
-		}
-		if (m_switchBox.getRawButton(7)) {
-			n += 3;
-		}
-		if (m_switchBox.getRawButton(11)) {
-			n += 4;
-		}
-		if (m_switchBox.getRawButton(6)) {
-			n += 5;
-		}
-		if (m_switchBox.getRawButton(8)) {
-			n += 6;
-		}
-		return n;
+		return ret;
 	}
 
 	/**
@@ -79,6 +64,12 @@ public final class AutonController {
 		return ret;
 	}
 
+	/**
+	 * Use one of the saved file in the roboRIO's autonomous mode directory.
+	 * 
+	 * @param autonNumber
+	 *            The number of the autonomous mode you wish to use.
+	 */
 	public void useFTPFile(int autonNumber) {
 		if (m_step == 0) {
 			try {
@@ -153,6 +144,25 @@ public final class AutonController {
 			}
 		} else {
 			m_drives.setSpeed(0.0);
+		}
+	}
+
+	public boolean getSwitch(int n) {
+		switch (n) {
+		case 1:
+			return m_switchBox.getRawButton(5);
+		case 2:
+			return m_switchBox.getRawButton(12);
+		case 3:
+			return m_switchBox.getRawButton(7);
+		case 4:
+			return m_switchBox.getRawButton(11);
+		case 5:
+			return m_switchBox.getRawButton(6);
+		case 6:
+			return m_switchBox.getRawButton(8);
+		default:
+			return false;
 		}
 	}
 

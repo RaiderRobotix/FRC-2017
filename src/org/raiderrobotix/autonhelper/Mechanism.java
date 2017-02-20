@@ -8,6 +8,7 @@ public abstract class Mechanism {
 	public static final int GEAR_COLLECTOR = 2;
 	public static final int INTAKE = 3;
 	public static final int SHOOTER = 4;
+	public static final int LINE_BREAKER = 5;
 
 	public abstract class Drives {
 
@@ -30,6 +31,13 @@ public abstract class Mechanism {
 
 		public static final int INTAKE_IN = 0;
 		public static final int INTAKE_OFF = 1;
+
+	}
+
+	public abstract class LineBreaker {
+
+		public static final int BROKEN = 0;
+		public static final int UNBROKEN = 1;
 
 	}
 

@@ -13,6 +13,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -26,6 +27,7 @@ public final class InstructionPanel extends JPanel {
 	private JButton m_removeButton = new JButton("X");
 	private JButton m_reorderButtonUp = new JButton("<html>&#9650<html>");
 	private JButton m_reorderButtonDown = new JButton("<html>&#9660<html>");
+	private JButton m_expirationButton = new JButton("Expiration");
 	private JComboBox<Object> m_mechanismDropDown;
 	private JLabel m_speedLabel = new JLabel("Speed: ");
 	private JTextField m_speedField = new JTextField();
@@ -52,9 +54,6 @@ public final class InstructionPanel extends JPanel {
 		m_instructionSet = InstructionSet.getInstance();
 
 		// Create panels For Extra Auton Data
-		m_speedPanel.setLayout(m_dataPanelLayout);
-		m_speedPanel.add(m_speedLabel);
-		m_speedPanel.add(m_speedField);
 		m_speedField.addMouseListener(new MouseListener() {
 			public void mouseClicked(MouseEvent e) {
 			}
@@ -77,6 +76,10 @@ public final class InstructionPanel extends JPanel {
 				}
 			}
 		});
+
+		m_speedPanel.setLayout(m_dataPanelLayout);
+		m_speedPanel.add(m_speedLabel);
+		m_speedPanel.add(m_speedField);
 		m_valuePanel.setLayout(m_dataPanelLayout);
 		m_valuePanel.add(m_valueLabel);
 		m_valuePanel.add(m_valueField);
@@ -103,6 +106,30 @@ public final class InstructionPanel extends JPanel {
 			}
 		});
 
+		m_expirationButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				switch (JOptionPane.showOptionDialog(null,
+						new JLabel("<html>Adjust the expiration time?</html>", SwingConstants.CENTER), "Option",
+						JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, new String[] { "Set", "Remove" }, -1)) {
+				case 0:
+					getNumberLoop: while (true) {
+						try {
+							double d = Double.parseDouble(JOptionPane.showInputDialog(null,
+									new JLabel("<html>Enter expiration time.</html>", SwingConstants.CENTER),
+									"Expiration,", JOptionPane.PLAIN_MESSAGE));
+							m_expirationButton.setText(String.format("Exp.: %f", d));
+							break getNumberLoop;
+						} catch (NumberFormatException nfe) {
+							// Do nothing as loop will repeat.
+						}
+					}
+					break;
+				case 1:
+					m_expirationButton.setText("Expiration");
+				}
+			}
+		});
+
 		// Create Mechanism Drop-Down menu
 		m_mechanismDropDown.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -110,9 +137,21 @@ public final class InstructionPanel extends JPanel {
 				switch (m_mechanismMapping.get((String) m_mechanismDropDown.getSelectedItem()).get(0)) {
 				case Mechanism.DRIVES:
 					m_extraDataPanel.add(m_valuePanel);
-					m_extraDataPanel.add(m_speedPanel);
+					JPanel expirationSpeedPanel = new JPanel();
+					expirationSpeedPanel.setLayout(m_dataPanelLayout);
+					JPanel expirationPaneEast = new JPanel();
+					expirationPaneEast.setLayout(m_dataPanelLayout);
+					expirationPaneEast.add(m_expirationButton);
+					expirationPaneEast.add(m_speedLabel);
+					expirationSpeedPanel.add(expirationPaneEast);
+					expirationSpeedPanel.add(m_speedField);
+					m_extraDataPanel.add(expirationSpeedPanel);
 					break;
 				case Mechanism.BRAKES:
+					m_extraDataPanel.add(new JLabel(""));
+					m_extraDataPanel.add(new JLabel(""));
+					break;
+				case Mechanism.LINE_BREAKER:
 					m_extraDataPanel.add(new JLabel(""));
 					m_extraDataPanel.add(new JLabel(""));
 					break;
@@ -184,11 +223,21 @@ public final class InstructionPanel extends JPanel {
 				|| i0 == Mechanism.GEAR_COLLECTOR) {
 			i.getNext();
 		}
-		if (!(m_extraDataPanel.getComponent(0) instanceof JLabel)) {
+		if (i0 != Mechanism.DRIVES) {
+			if (!(m_extraDataPanel.getComponent(0) instanceof JLabel)) {
+				m_valueField.setText(i.getNext());
+			}
+			if (!(m_extraDataPanel.getComponent(1) instanceof JLabel)) {
+				m_speedField.setText(i.getNext());
+			}
+		} else {
 			m_valueField.setText(i.getNext());
-		}
-		if (!(m_extraDataPanel.getComponent(1) instanceof JLabel)) {
 			m_speedField.setText(i.getNext());
+			if (i.hasExpirationTime()) {
+				m_expirationButton.setText(String.format("Exp.: %f", i.getExpirationTime()));
+			} else {
+				m_expirationButton.setText("Expiration");
+			}
 		}
 	}
 
@@ -198,12 +247,23 @@ public final class InstructionPanel extends JPanel {
 	 */
 	private void mapMechanisms() {
 		m_mechanismMapping = new HashMap<String, ArrayList<Integer>>();
-
 		// Drive Straight
 		ArrayList<Integer> n = new ArrayList<Integer>();
 		n.add(Mechanism.DRIVES);
 		n.add(Mechanism.Drives.STRAIGHT);
 		m_mechanismMapping.put("Drive Straight", n);
+
+		// Line Breaker Broken
+		n = new ArrayList<Integer>();
+		n.add(Mechanism.LINE_BREAKER);
+		n.add(Mechanism.LineBreaker.BROKEN);
+		m_mechanismMapping.put("Wait For Line Breaker Broken", n);
+
+		// Line Breaer Unbroken
+		n = new ArrayList<Integer>();
+		n.add(Mechanism.LINE_BREAKER);
+		n.add(Mechanism.LineBreaker.UNBROKEN);
+		m_mechanismMapping.put("Wait For Line Breaker Unbroken", n);
 
 		// Turn To Angle
 		n = new ArrayList<Integer>();
@@ -291,6 +351,10 @@ public final class InstructionPanel extends JPanel {
 		case Mechanism.SHOOTER:
 			ret.add(m_speedField.getText());
 			break;
+		}
+		String expirationText = m_expirationButton.getText();
+		if (expirationText.indexOf("Expiration") < 0) {
+			ret.setExpirationTime(Double.parseDouble(expirationText.substring(expirationText.indexOf(" ") + 1)));
 		}
 		return ret;
 	}

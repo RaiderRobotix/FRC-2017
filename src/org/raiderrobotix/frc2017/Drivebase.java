@@ -89,14 +89,9 @@ public final class Drivebase {
 	}
 
 	public double getAverageEncoderDistance() {
-		// return (getLeftEncoderDistance() + getRightEncoderDistance()) / 2.0;
+		// return (getLeftEncoderDistance() + getRightEncoderDistance()) / 2.0; TODO: fix
 		return getRightEncoderDistance();
 	}
-
-	/*
-	 * public void resetEncoders() { m_leftEncoder.reset();
-	 * m_rightEncoder.reset(); }
-	 */
 
 	/**
 	 * Have the robot turn to a specific angle at a specified speed.

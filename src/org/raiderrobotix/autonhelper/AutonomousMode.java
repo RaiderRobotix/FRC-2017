@@ -58,15 +58,36 @@ public final class AutonomousMode extends ArrayList<Instruction> {
 		try {
 			if (this.size() > 0) {
 				Instruction instruction = this.get(0);
+				if (instruction.hasExpirationTime() && instruction.getExpirationTime() >= time) {
+					m_drives.setSpeed(0.0);
+					this.remove(0);
+					return 0.0;
+				}
 				switch (Integer.parseInt(instruction.getNext())) {
 				// Determine Mechanism requires and use it.
 				case Mechanism.INTAKE:
 					switch (Integer.parseInt(instruction.getNext())) {
 					case Mechanism.Intake.INTAKE_IN:
-						m_fuelHandler.intakeFuel(false);
+						m_fuelHandler.intakeFuel();
 						break;
 					case Mechanism.Intake.INTAKE_OFF:
 						m_fuelHandler.stopIntake();
+						break;
+					}
+					break;
+				case Mechanism.LINE_BREAKER:
+					switch (Integer.parseInt(instruction.getNext())) {
+					case Mechanism.LineBreaker.BROKEN:
+						if (m_gearCollector.lineBroken()) {
+							time = 0.0;
+							this.remove(0.0);
+						}
+						break;
+					case Mechanism.LineBreaker.UNBROKEN:
+						if (!(m_gearCollector.lineBroken())) {
+							time = 0.0;
+							this.remove(0.0);
+						}
 						break;
 					}
 					break;

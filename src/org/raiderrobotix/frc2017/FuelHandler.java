@@ -30,11 +30,11 @@ public final class FuelHandler {
 	}
 
 	public void intakeFuel() {
-		intakeFuel(false);
+		setIntakeSpeed(Constants.FUEL_INTAKE_SPEED);
 	}
-	
-	public void intakeFuel(boolean override) {
-		m_intake.set(Constants.FUEL_INTAKE_SPEED * (override ? -1.0 : 1.0));
+
+	public void reverseIntake() {
+		setIntakeSpeed(-Constants.FUEL_INTAKE_SPEED);
 	}
 
 	public void stopIntake() {

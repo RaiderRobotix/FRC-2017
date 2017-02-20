@@ -13,16 +13,14 @@ public abstract class Constants {
 	// Extra Mechanism Speed Constants
 	public static final double FUEL_INTAKE_SPEED = 1.0;
 	public static final double CLIMB_SPEED = 1.0;
-	public static final double SHOOTER_HIGH_SPEED = 1.0; // TODO: get
-	public static final double SHOOTER_LOW_SPEED = 0.6; // TODO: get
+	public static final double SHOOTER_HIGH_SPEED = 1.0;
+	public static final double SHOOTER_LOW_SPEED = 0.6;
 
 	// Auto-Driving Constants
 	public static final double TURN_ANGLE_TOLERANCE = 1.0; // (In Degrees)
 	public static final double DRIVE_STRAIGHT_ANGLE_TOLERANCE = 1.0;
-	public static final double DRIVE_STRAIGHT_SPEED_SUBTRACTION = 0.15; // TODO:
-																		// get
-	public static final double DRIVE_STRAIGHT_DISTANCE_TOLERANCE = 1.0; // TODO:
-																		// get
+	public static final double DRIVE_STRAIGHT_SPEED_SUBTRACTION = 0.15;
+	public static final double DRIVE_STRAIGHT_DISTANCE_TOLERANCE = 1.0;
 	public static final double SLOW_SPEED_WEAK = 0.12;
 	public static final double SLOW_SPEED_STRONG = 0.18;
 	public static final double DRIVE_STRAIGHT_SLOW_RANGE = 24.0;

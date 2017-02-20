@@ -92,6 +92,8 @@ public final class InstructionSet extends ArrayList<InstructionPanel> {
 			case Mechanism.DRIVES:
 				ret += "m_drives.brakesOff();\n";
 				ret += "m_drives.resetSensors();\n";
+				ret += "m_timer.start();\n";
+				ret += "m_timer.reset();\n";
 				break;
 			case Mechanism.BRAKES:
 				ret += "m_drives.setSpeed(0.0);\n";
@@ -108,6 +110,13 @@ public final class InstructionSet extends ArrayList<InstructionPanel> {
 			stepCounter++;
 			Instruction instruction = i.getInstruction();
 			switch (Integer.parseInt(instruction.getNext())) {
+			case Mechanism.LINE_BREAKER:
+				ret += "if (";
+				if (Integer.parseInt(instruction.getNext()) == Mechanism.LineBreaker.UNBROKEN) {
+					ret += "!";
+				}
+				ret += "m_gearCollector.lineBroken() {\n";
+				extraIndentExists = true;
 			case Mechanism.INTAKE:
 				switch (Integer.parseInt(instruction.getNext())) {
 				case Mechanism.Intake.INTAKE_IN:
@@ -136,6 +145,15 @@ public final class InstructionSet extends ArrayList<InstructionPanel> {
 				extraIndentExists = true;
 				break;
 			case Mechanism.DRIVES:
+				if (instruction.hasExpirationTime()) {
+					ret += "if(m_timer.get() >= " + instruction.getExpirationTime() + ") {\n";
+					ret += "m_drives.setSpeed(0.0)\n";
+					ret += "m_drives.resetSensors();\n";
+					ret += "m_timer.start();\n";
+					ret += "m_timer.reset();\n";
+					ret += "m_step++;";
+					ret += "} else ";
+				}
 				switch (Integer.parseInt(instruction.getNext())) {
 				case Mechanism.Drives.STRAIGHT:
 					ret += "if (m_drives.driveStraight(" + instruction.getNext() + ", " + instruction.getNext()

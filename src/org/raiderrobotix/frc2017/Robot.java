@@ -79,6 +79,8 @@ public final class Robot extends IterativeRobot {
 	}
 
 	public void teleopPeriodic() {
+		m_OI.setAutoIntakeOn(m_autonController.getSwitch(5));
+		m_OI.setAutoLineBreakOn(m_autonController.getSwitch(6));
 		m_OI.enableTeleopControls();
 		update();
 	}

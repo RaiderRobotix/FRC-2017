@@ -18,9 +18,11 @@ public final class OI {
 	private final Joystick m_rightStick;
 	private final Joystick m_operatorStick;
 
-	// ===== Line Breaker Constants =====
+	// ===== Automatic Constants =====
 	private final Timer m_teleopTimer;
 	private double m_lastCloseTime = -Constants.LINE_BREAKER_CLOSE_WAIT_TIME;
+	private boolean m_autoIntakeOn = true;
+	private boolean m_autoLineBreak = true;
 
 	public OI() {
 		m_drives = Drivebase.getInstance();
@@ -64,44 +66,44 @@ public final class OI {
 		}
 
 		// =========== GEAR COLLECTOR ===========
-		if (getOperatorButton(10) || getOperatorButton(12)) {
-			// If climbing, stop gear collector.
-			m_gearCollector.closeCollector();
-		} else if (getOperatorTrigger()) {
+		if (getOperatorTrigger()) {
 			m_gearCollector.openCollector();
 		} else if (getOperatorButton(3)) {
 			m_gearCollector.closeCollector();
-		} else if (m_gearCollector.lineBroken()) {
-			m_gearCollector.closeCollector();
-			m_lastCloseTime = m_teleopTimer.get();
-		} else if (m_teleopTimer.get() > m_lastCloseTime + Constants.LINE_BREAKER_CLOSE_WAIT_TIME) {
-			m_gearCollector.openCollector();
+		} else if (m_autoLineBreak) {
+			if (getOperatorButton(10) || getOperatorButton(12)) {
+				m_gearCollector.closeCollector();
+			} else if (m_gearCollector.lineBroken()) {
+				m_gearCollector.closeCollector();
+				m_lastCloseTime = m_teleopTimer.get();
+			} else if (m_teleopTimer.get() > m_lastCloseTime + Constants.LINE_BREAKER_CLOSE_WAIT_TIME) {
+				m_gearCollector.openCollector();
+			}
 		}
 
 		// =========== CLIMBER ===========
 		if (getOperatorButton(10)) {
-			m_climber.startMotor(false);
+			m_climber.runForward();
 		} else if (getOperatorButton(12)) {
-			m_climber.startMotor(true);
+			m_climber.runBackwards();
 		} else {
 			m_climber.stopMotor();
 		}
 
 		// =========== FUEL HANDLER ===========
-		if ((getOperatorButton(10) || getOperatorButton(12)) && (!getRightButton(2))) {
-			// If climbing, stop intake.
-			m_fuelHandler.stopIntake();
-		} else if (getOperatorButton(8)) {
-			m_fuelHandler.intakeFuel(true);
+		if (getRightButton(2)) { // Intake
+			m_fuelHandler.intakeFuel();
 		} else if (getOperatorButton(7)) {
 			m_fuelHandler.stopIntake();
-		} else if (getRightY() > 0.0 || getLeftY() > 0.0 || getRightButton(2)) {
+		} else if (getOperatorButton(8)) {
+			m_fuelHandler.reverseIntake();
+		} else if (m_autoIntakeOn && (getRightY() > 0.0 || getLeftY() > 0.0)) {
 			m_fuelHandler.intakeFuel();
 		} else {
 			m_fuelHandler.stopIntake();
 		}
 
-		if (getOperatorButton(6)) {
+		if (getOperatorButton(6)) { // Shooter
 			m_fuelHandler.setShooterSpeed(Constants.SHOOTER_HIGH_SPEED);
 		} else if (getOperatorButton(4)) {
 			m_fuelHandler.setShooterSpeed(Constants.SHOOTER_LOW_SPEED);
@@ -150,5 +152,13 @@ public final class OI {
 
 	public boolean getLeftButton(int btn) {
 		return m_leftStick.getRawButton(btn);
+	}
+
+	public void setAutoIntakeOn(boolean on) {
+		m_autoIntakeOn = on;
+	}
+
+	public void setAutoLineBreakOn(boolean on) {
+		m_autoLineBreak = on;
 	}
 }

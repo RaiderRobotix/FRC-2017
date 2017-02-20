@@ -79,14 +79,14 @@ public abstract class Utility {
 	}
 
 	public static String getAutonName(StringBuilder lastAutonName) {
-		String lastName = lastAutonName.toString();
-		if (lastName.indexOf("Desktop") >= 0) {
-			lastName = lastName.substring(lastName.lastIndexOf("\\") + 1);
-		}
-		if(lastName.indexOf(".") >= 0) {
-			lastName = lastName.substring(0, lastName.indexOf("."));
-		}
-		if (lastName != null) {
+		if (lastAutonName != null) {
+			String lastName = lastAutonName.toString();
+			if (lastName.indexOf("Desktop") >= 0) {
+				lastName = lastName.substring(lastName.lastIndexOf("\\") + 1);
+			}
+			if (lastName.indexOf(".") >= 0) {
+				lastName = lastName.substring(0, lastName.indexOf("."));
+			}
 			int answer = -1;
 			do {
 				answer = JOptionPane.showOptionDialog(null,
@@ -152,8 +152,6 @@ public abstract class Utility {
 	 *             Will throw if there is an error with the FTP connection.
 	 */
 	public static void sendOverFile(ArrayList<Instruction> auton, String autonFileName) throws IOException {
-		if(1==1)
-			return; // TODO: remove
 		URL url = new URL(Constants.FTP_PREFIX + Constants.AUTON_DATA_RIO_DIRECTORY + autonFileName);
 		URLConnection conn = url.openConnection();
 		ObjectOutputStream out = new ObjectOutputStream(conn.getOutputStream());
