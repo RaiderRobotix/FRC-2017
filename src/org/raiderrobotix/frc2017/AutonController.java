@@ -100,15 +100,56 @@ public final class AutonController {
 		}
 	}
 
-	public void test() {
+	/**
+	 * Tested and works. Not on SendableChooser.
+	 */
+	public void redLeftGear() {
 		if (m_step == 0) {
-			m_drives.resetSensors();
 			m_drives.brakesOff();
+			m_drives.resetSensors();
 			m_step++;
 		} else if (m_step == 1) {
-			if (m_drives.turnToAngle(90.0, 0.5)) {
-				m_drives.setSpeed(0.0);
+			if (m_drives.driveStraight(96.0, 0.7)) {
+				m_drives.brakesOff();
+				m_drives.resetSensors();
 				m_step++;
+			}
+		} else if (m_step == 2) {
+			if (m_drives.turnToAngle(60.0, 0.5)) {
+				m_drives.brakesOff();
+				m_drives.resetSensors();
+				m_step++;
+			}
+		} else if (m_step == 3) {
+			if (m_drives.driveStraight(31.0, 0.7)) {
+			}
+		} else {
+			m_drives.setSpeed(0.0);
+		}
+	}
+
+	/**
+	 * Tested and works. Not in SendableChooser
+	 */
+	public void redGearRight() {
+		if (m_step == 0) {
+			m_drives.brakesOff();
+			m_drives.resetSensors();
+			m_step++;
+		} else if (m_step == 1) {
+			if (m_drives.driveStraight(90.0, 0.7)) {
+				m_drives.brakesOff();
+				m_drives.resetSensors();
+				m_step++;
+			}
+		} else if (m_step == 2) {
+			if (m_drives.turnToAngle(-60.0, 0.5)) {
+				m_drives.brakesOff();
+				m_drives.resetSensors();
+				m_step++;
+			}
+		} else if (m_step == 3) {
+			if (m_drives.driveStraight(36.0, 0.7)) {
 			}
 		} else {
 			m_drives.setSpeed(0.0);
