@@ -28,7 +28,7 @@ public final class Climber {
 	}
 
 	public void runBackwards() {
-		setSpeed(Constants.CLIMB_SPEED);
+		setSpeed(-Constants.CLIMB_SPEED);
 	}
 
 	public void stopMotor() {

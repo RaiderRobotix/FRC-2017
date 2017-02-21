@@ -58,7 +58,8 @@ public final class AutonomousMode extends ArrayList<Instruction> {
 		try {
 			if (this.size() > 0) {
 				Instruction instruction = this.get(0);
-				if (instruction.hasExpirationTime() && instruction.getExpirationTime() >= time) {
+				if (instruction.hasExpirationTime() && time >= instruction.getExpirationTime()) {
+					System.out.println("GOT HERE: " + instruction.getExpirationTime());
 					m_drives.setSpeed(0.0);
 					this.remove(0);
 					return 0.0;

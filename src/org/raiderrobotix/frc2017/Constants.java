@@ -71,7 +71,7 @@ public abstract class Constants {
 	public static final boolean LEFT_DRIVE_MOTORS_INVERTED = true;
 	public static final boolean LEFT_ENCODER_INVERTED = true;
 	public static final boolean RIGHT_ENCODER_INVERTED = false;
-	public static final boolean INTAKE_MOTOR_INVERTED = true;
+	public static final boolean INTAKE_MOTOR_INVERTED = false;
 	public static final boolean SHOOTER_MOTOR_INVERTED = false;
 	public static final boolean CLIMB_MOTOR_INVERTED = true;
 
