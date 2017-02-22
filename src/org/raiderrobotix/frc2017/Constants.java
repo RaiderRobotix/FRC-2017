@@ -14,7 +14,7 @@ public abstract class Constants {
 	public static final double FUEL_INTAKE_SPEED = 1.0;
 	public static final double CLIMB_SPEED = 1.0;
 	public static final double SHOOTER_HIGH_SPEED = 1.0;
-	public static final double SHOOTER_LOW_SPEED = 0.6;
+	public static final double SHOOTER_LOW_SPEED = 0.55;
 
 	// Auto-Driving Constants
 	public static final double TURN_ANGLE_TOLERANCE = 1.0; // (In Degrees)
