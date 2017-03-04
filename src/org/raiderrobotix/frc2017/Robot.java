@@ -12,6 +12,7 @@ public final class Robot extends IterativeRobot {
 	private OI m_OI;
 	private Drivebase m_drives;
 	private GearCollector m_gearCollector;
+	private FuelHandler m_fuelHandler;
 	private Compressor m_compressor;
 	private PowerDistributionPanel m_pdp;
 
@@ -31,6 +32,7 @@ public final class Robot extends IterativeRobot {
 		m_OI = OI.getInstance();
 		m_drives = Drivebase.getInstance();
 		m_gearCollector = GearCollector.getInstance();
+		m_fuelHandler = FuelHandler.getInstance();
 		m_compressor = new Compressor(Constants.PCM_CAN_ADDRESS);
 		m_pdp = new PowerDistributionPanel(Constants.PDP_CAN_ADDRESS);
 
@@ -58,6 +60,7 @@ public final class Robot extends IterativeRobot {
 			m_autonChosen = m_autonController.getAutonChosen();
 			System.out.printf("Auton Chosen: %d\n", m_autonChosen);
 		}
+		
 	}
 
 	public void autonomousInit() {
@@ -65,6 +68,7 @@ public final class Robot extends IterativeRobot {
 		m_autonController.resetStep();
 		m_drives.resetSensors();
 		m_gearCollector.closeCollector();
+		m_fuelHandler.closeFlapper();
 	}
 
 	public void autonomousPeriodic() {
@@ -76,6 +80,7 @@ public final class Robot extends IterativeRobot {
 
 	public void teleopInit() {
 		m_drives.brakesOff();
+		m_fuelHandler.closeFlapper();
 	}
 
 	public void teleopPeriodic() {

@@ -128,7 +128,6 @@ public final class AutonomousMode extends ArrayList<Instruction> {
 					}
 					break;
 				case Mechanism.WAIT:
-					System.out.println("Time: " + time);
 					if (time >= Double.parseDouble(instruction.getNext())) {
 						time = 0.0;
 						this.remove(0);

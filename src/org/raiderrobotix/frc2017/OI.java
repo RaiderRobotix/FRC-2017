@@ -23,6 +23,10 @@ public final class OI {
 	private double m_lastCloseTime = -Constants.LINE_BREAKER_CLOSE_WAIT_TIME;
 	private boolean m_autoIntakeOn = true;
 	private boolean m_autoLineBreak = true;
+	private double m_warmupFinishTime = 0.0;
+	private double m_reverseFinishTime = 0.0;
+	private boolean m_lastReverse = false;
+	private boolean m_shooterIsRevving = false;
 
 	public OI() {
 		m_drives = Drivebase.getInstance();
@@ -91,7 +95,11 @@ public final class OI {
 		}
 
 		// =========== FUEL HANDLER ===========
-		if (getRightButton(2)) { // Intake
+		boolean shootHigh = getOperatorButton(6); // Shooter: Joysticks
+		boolean shootLow = getOperatorButton(4);
+		boolean reverseShooter = getOperatorButton(5);
+
+		if (getRightButton(2) || shootHigh || shootLow) { // Intake
 			m_fuelHandler.intakeFuel();
 		} else if (getOperatorButton(7)) {
 			m_fuelHandler.stopIntake();
@@ -103,15 +111,44 @@ public final class OI {
 			m_fuelHandler.stopIntake();
 		}
 
-		if (getOperatorButton(6)) { // Shooter
+		if (shootHigh) { // Shooter: Control
 			m_fuelHandler.setShooterSpeed(Constants.SHOOTER_HIGH_SPEED);
-		} else if (getOperatorButton(4)) {
+		} else if (shootLow) {
 			m_fuelHandler.setShooterSpeed(Constants.SHOOTER_LOW_SPEED);
-		} else if (getOperatorButton(5)) {
-			m_fuelHandler.setShooterSpeed(-Constants.SHOOTER_LOW_SPEED);
+		} else if (reverseShooter && m_teleopTimer.get() >= m_reverseFinishTime) {
+			m_fuelHandler.setShooterSpeed(Constants.SHOOTER_REVERSE_SPEED);
 		} else {
+			m_shooterIsRevving = false;
 			m_fuelHandler.setShooterSpeed(0.0);
 		}
+
+		if (!m_shooterIsRevving) { // Flapper: Warm-Up Speeds
+			if (shootHigh) {
+				m_warmupFinishTime = m_teleopTimer.get() + Constants.SHOOTER_WARMUP_TIME_HIGH;
+				m_shooterIsRevving = true;
+			} else if (shootLow) {
+				m_warmupFinishTime = m_teleopTimer.get() + Constants.SHOOTER_WARMUP_TIME_LOW;
+				m_shooterIsRevving = true;
+			} else if (reverseShooter) {
+				m_warmupFinishTime = m_teleopTimer.get();
+				m_shooterIsRevving = true;
+			}
+		}
+
+		if ((!m_lastReverse) && reverseShooter) { // Reverse Shooter- Wait Time
+			m_reverseFinishTime = m_teleopTimer.get() + Constants.SHOOTER_REVERSE_WAIT_TIME;
+		}
+
+		if (reverseShooter) { // Flapper- Control
+			m_fuelHandler.openFlapper();
+		} else if ((m_shooterIsRevving && m_teleopTimer.get() >= m_warmupFinishTime && getRightTrigger())
+				|| getRightButton(5)) {
+			m_fuelHandler.openFlapper();
+		} else {
+			m_fuelHandler.closeFlapper();
+		}
+
+		m_lastReverse = reverseShooter;
 	}
 
 	public double getLeftY() {

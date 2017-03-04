@@ -15,6 +15,7 @@ public abstract class Constants {
 	public static final double CLIMB_SPEED = 1.0;
 	public static final double SHOOTER_HIGH_SPEED = 1.0;
 	public static final double SHOOTER_LOW_SPEED = 0.55;
+	public static final double SHOOTER_REVERSE_SPEED = -0.475;
 
 	// Auto-Driving Constants
 	public static final double TURN_ANGLE_TOLERANCE = 1.0; // (In Degrees)
@@ -75,8 +76,14 @@ public abstract class Constants {
 	public static final boolean SHOOTER_MOTOR_INVERTED = false;
 	public static final boolean CLIMB_MOTOR_INVERTED = true;
 
-	// Assorted Constants
+	// Pneumatics Constants
 	public static final int GEAR_CYLINDERS_SOLENOID_CHANNEL = 4;
+	public static final int FLAPPER_SOLENOID_CHANNEL = 7;
+	public static final double SHOOTER_WARMUP_TIME_HIGH = 0.4;
+	public static final double SHOOTER_WARMUP_TIME_LOW = 0.3;
+	public static final double SHOOTER_REVERSE_WAIT_TIME = 0.5;
+
+	// Assorted Constants
 	public static final double LINE_BREAKER_CLOSE_WAIT_TIME = 1.5;
 	public static final int ULTRASONIC_PWM = 0;
 	public static final double ULTRASONIC_CONSTANT = 1.0;
