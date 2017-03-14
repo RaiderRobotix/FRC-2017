@@ -1,5 +1,7 @@
 package org.raiderrobotix.frc2017;
 
+import java.io.File;
+
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
@@ -60,7 +62,7 @@ public final class Robot extends IterativeRobot {
 			m_autonChosen = m_autonController.getAutonChosen();
 			System.out.printf("Auton Chosen: %d\n", m_autonChosen);
 		}
-		
+
 	}
 
 	public void autonomousInit() {
